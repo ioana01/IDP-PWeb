@@ -1,0 +1,27 @@
+import './App.css';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/contexts";
+import Navbar from './components/navbar/navbar';
+import Login from './components/auth/login/login';
+import Register from './components/auth/register/register';
+import PrivateRoute from './components/private-route/private-route';
+
+function App() {
+  return (
+    <div className="align-items-center justify-content-center">
+      <div className="w-100">
+        <Router>
+          <AuthProvider>
+            <Navbar/>
+            <Switch>
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+            </Switch>
+          </AuthProvider> 
+        </Router>
+      </div>
+    </div>
+  );
+}
+
+export default App;
