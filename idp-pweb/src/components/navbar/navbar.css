@@ -5,3 +5,20 @@
 .navbar-div {
     overflow-x: hidden;
 }
+
+.nav-item {
+    color: #6C63FF;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 5px;
+}
+
+.nav-item:hover {
+    border-bottom: 2px solid #6C63FF;
+}
+
+.burger-icon {
+    color: #6C63FF;
+    border: 1px solid #6C63FF;
+}
