@@ -1,0 +1,30 @@
+.about-title {
+    font-size: 45px;
+    font-weight: bold;
+}
+
+.top-info {
+    margin: 2rem 2rem;
+}
+
+.top-info-p {
+    color: #676464;
+    padding-right: 50px;
+}
+
+.about-logo {
+    width: 70%;
+    margin-left: 12.5%;
+}
+
+.step-title {
+    text-align: center;
+    color: #6C63FF;
+    font-weight: bold;
+}
+
+.steps {
+    padding: 0 50px;
+    margin: 50px 0;
+    color: #676464;
+}
