@@ -4,6 +4,9 @@ import { useAuth } from "../../../contexts/contexts";
 import { Link, useHistory } from "react-router-dom";
 import { database } from "../../../firebase";
 import './register.css';
+import registerPhoto from './register-photo.svg';
+import Step1 from "./step1/step1";
+import Step2 from "./step2/step2";
 
 export default function SignUp() {
     const nameRef = useRef();
@@ -16,6 +19,7 @@ export default function SignUp() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+    const [currentStep, setStep] = useState(0);
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -43,52 +47,25 @@ export default function SignUp() {
         setLoading(false);
     }
 
+    function updateStep() {
+        currentStep = 1;
+    }
+
     return (
         <>
-            <Card id='card-container-signup'>
-                <Card.Body>
-                    <h2 className="text-center mb-4">Sign Up</h2>
-                    {error && <Alert variant="danger">{error}</Alert>}
-
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group id="name">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="name" ref={nameRef} required />
-                        </Form.Group>
-
-                        <Form.Group id="email">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" ref={emailRef} required />
-                        </Form.Group>
-
-                        <Form.Group id="userType">
-                            <Form.Label>User type</Form.Label> <br></br>
-                            <Form.Select ref={userTypeRef} required>
-                                <option>Select an option</option>
-                                <option>(1)</option>
-                                <option>(2)</option>
-                            </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group id="password">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" ref={passwordRef} required />
-                        </Form.Group>
-
-                        <Form.Group id="password-confirm" style={{ marginBottom: "20px" }}>
-                            <Form.Label>Password Confirmation</Form.Label>
-                            <Form.Control type="password" ref={passwordConfirmRef} required />
-                        </Form.Group>
-
-                        <Button disabled={loading} className="w-100 auth-button" type="submit">
-                            Sign Up
-                        </Button>
-                    </Form>
-                </Card.Body>
-            </Card>
-            
-            <div className="w-100 text-center mt-2" id='login-check'>
-                Already have an account? <Link to="/login">Log In</Link>
+            <div class="lg:columns-2 gap-0 login-container">
+                <div className="photo-container">
+                    <img src={registerPhoto} class='side-photo'></img>
+                </div>
+                <form className="login-form" onSubmit={handleSubmit}>
+                    {currentStep[0] === 0 || currentStep === 0 ?
+                        <Step1></Step1> :
+                        <Step2></Step2> 
+                    }
+                    {currentStep[0] === 0 || currentStep === 0 ?
+                        <button className='register-submit-button' onClick={() => setStep((currentStep + 1))}>Next</button> :
+                        <button className='register-submit-button' type='submit'>Register</button>}
+                </form>
             </div>
         </>
     )
