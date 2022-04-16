@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
-import { Navbar, Nav } from 'react-bootstrap';
 import { useAuth } from "../../contexts/contexts";
 import { auth } from "../../firebase";
 import './navbar.css';
