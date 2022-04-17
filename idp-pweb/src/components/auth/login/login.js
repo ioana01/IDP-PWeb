@@ -6,7 +6,7 @@ import login_logo from './login_logo.svg';
 import profilePic from './profile_pic.svg';
 
 export default function Login() {
-    const emailRef = useRef();
+    const usernameRef = useRef();
     const passwordRef = useRef(); 
     const { login } = useAuth();
     const [error, setError] = useState("");
@@ -23,7 +23,7 @@ export default function Login() {
         try {
             setError("");
             setLoading(true);
-            const result = await login(emailRef.current.value, passwordRef.current.value);
+            const result = await login(usernameRef.current.value, passwordRef.current.value);
             history.push("/")
         } catch(error) { 
           setError(error.message);
@@ -46,14 +46,14 @@ export default function Login() {
                     <div class="section">
                         <div class="login-input-wrapper">
                             <i class="fa fa-user font-awesome-icon"></i>
-                            <input class="custom-input" type="text" id="username" name="username" placeholder='Username'></input>
+                            <input class="custom-input" type="text" id="username" name="username" placeholder='Username' ref={usernameRef}></input>
                         </div>
                     </div>
 
                     <div class="section">
                         <div class="login-input-wrapper">
                             <i class="fa fa-lock font-awesome-icon"></i>
-                            <input class="custom-input" type="password" id="password" name="password" placeholder='Password'></input>
+                            <input class="custom-input" type="password" id="password" name="password" placeholder='Password' ref={passwordRef}></input>
                         </div>
                     </div>
 

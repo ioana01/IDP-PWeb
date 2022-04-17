@@ -7,6 +7,7 @@ import Register from './components/auth/register/register';
 import PrivateRoute from './components/private-route/private-route';
 import About from './components/about/about';
 import OfferForm from './components/offer-form/offer-form';
+import OffersList from './components/offers-list/offers-list';
 
 function App() {
   return (
@@ -18,8 +19,9 @@ function App() {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/about" component={About} />
+              <Route exact path="/" component={About} />
               <Route exact path="/offer" component={OfferForm} />
+              <Route exact path="/offers" component={OffersList} />
             </Switch>
           </AuthProvider> 
         </Router>
