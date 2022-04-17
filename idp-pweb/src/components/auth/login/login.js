@@ -35,25 +35,25 @@ export default function Login() {
     
     return (
         <>
-            <div class="lg:columns-2 gap-0 login-container">
+            <div className="lg:columns-2 gap-0 login-container">
                 <div className="photo-container">
-                    <img src={login_logo} class='side-photo'></img>
+                    <img src={login_logo} className='side-photo'></img>
                 </div>
                 <form className="login-form" onSubmit={handleLogIn}>
                     <img src={profilePic} className="profile-pic"></img>
                     <h2 className="login-title">WELCOME</h2>
                     
-                    <div class="section">
-                        <div class="login-input-wrapper">
-                            <i class="fa fa-user font-awesome-icon"></i>
-                            <input class="custom-input" type="text" id="username" name="username" placeholder='Username' ref={usernameRef}></input>
+                    <div className="section">
+                        <div className="login-input-wrapper">
+                            <i className="fa fa-user font-awesome-icon"></i>
+                            <input className="custom-input" type="text" id="username" name="username" placeholder='Username' ref={usernameRef}></input>
                         </div>
                     </div>
 
-                    <div class="section">
-                        <div class="login-input-wrapper">
-                            <i class="fa fa-lock font-awesome-icon"></i>
-                            <input class="custom-input" type="password" id="password" name="password" placeholder='Password' ref={passwordRef}></input>
+                    <div className="section">
+                        <div className="login-input-wrapper">
+                            <i className="fa fa-lock font-awesome-icon"></i>
+                            <input className="custom-input" type="password" id="password" name="password" placeholder='Password' ref={passwordRef}></input>
                         </div>
                     </div>
 
