@@ -10,6 +10,7 @@ import OfferForm from './components/offer-form/offer-form';
 import InfoPage from './components/info-page/InfoPage';
 import OffersList from './components/offers-list/offers-list';
 import AccountSettings from './components/account-settings/account-settings';
+import NotificationsPage from './components/notifications-page/notifications-page';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route exact path="/offers" component={OffersList} />
               <Route exact path="/info" component={InfoPage} />
               <Route exact path="/account" component={AccountSettings} />
+              <Route exact path="/notifications" component={NotificationsPage} />
             </Switch>
           </AuthProvider> 
         </Router>
