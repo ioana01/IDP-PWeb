@@ -39,7 +39,7 @@ export default function BootstrapNavbar() {
             </div>
             <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto" id="example-collapse-navbar">
                 <div class="text-sm lg:flex-grow">
-                    <a href="/about" class="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
+                    <a href="/" class="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         About
                     </a>
                     <a href="/offers" class="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">

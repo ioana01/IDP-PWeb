@@ -19,31 +19,31 @@ class Step1 extends Component {
                 <div class="register-section">
                     <div class="register-input-wrapper">
                         <i class="fa fa-user font-awesome-icon-register"></i>
-                        <input class="register-custom-input" type="text" id="name" name="name" placeholder='Name'></input>
+                        <input class="register-custom-input" type="text" id="name" name="name" placeholder='Name' ref={this.props.nameRef}></input>
                     </div>
                 </div>
 
                 <div class="register-section">
                     <div class="register-input-wrapper">
                         <i class="fa fa-envelope font-awesome-icon-register"></i>
-                        <input class="register-custom-input" type="text" id="email" name="email" placeholder='Email'></input>
+                        <input class="register-custom-input" type="text" id="email" name="email" placeholder='Email' ref={this.props.emailRef}></input>
                     </div>
                 </div>
 
                 <div class="register-section">
                     <div class="register-input-wrapper">
                         <i class="fa fa-phone font-awesome-icon-register"></i>
-                        <input class="register-custom-input" type="text" id="phone" name="phone" placeholder='Phone'></input>
+                        <input class="register-custom-input" type="text" id="phone" name="phone" placeholder='Phone' ref={this.props.phoneRef}></input>
                     </div>
                 </div>
 
                 <div class="register-section">
                     <div class="register-input-wrapper">
                         <i class="fa fa-arrow-down font-awesome-icon-register"></i>
-                        <select id="cars" name="cars" class="register-custom-input">
+                        <select id="userType" name="cars" class="register-custom-input" ref={this.props.userTypeRef}>
                             <option className="register-option">Type of account</option>
-                            <option className="register-option">Beneficiar</option>
-                            <option className="register-option">Donator</option>
+                            <option className="register-option">I need help</option>
+                            <option className="register-option">I offer help</option>
                         </select>
                         
                     </div>
@@ -52,7 +52,7 @@ class Step1 extends Component {
                 <div class="register-section">
                     <div class="register-input-wrapper">
                         <i class="fa fa-lock font-awesome-icon-register"></i>
-                        <input class="register-custom-input" type="password" id="password" name="password" placeholder='Password'></input>
+                        <input class="register-custom-input" type="password" id="password" name="password" placeholder='Password' ref={this.props.passwordRef}></input>
                     </div>
                 </div>
             </>
