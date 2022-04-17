@@ -27,7 +27,7 @@ class Step2 extends Component {
         return(
             <>
                 <h2 className="register-title-step2">Describe your group</h2>
-                <div class="input-group">
+                <div className="input-group">
                     <div className="quantity-wrapper">
                         <label className="category-label">Adults (18 - 65)</label>
                         <QuantityChange

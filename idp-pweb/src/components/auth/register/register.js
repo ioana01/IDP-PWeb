@@ -79,9 +79,9 @@ export default function SignUp() {
 
     return (
         <>
-            <div class="lg:columns-2 gap-0 login-container">
+            <div className="lg:columns-2 gap-0 login-container">
                 <div className="photo-container">
-                    <img src={registerPhoto} class='side-photo'></img>
+                    <img src={registerPhoto} className='side-photo'></img>
                 </div>
                 <form className="login-form" onSubmit={handleSubmit}>
                     {currentStep[0] === 0 || currentStep === 0 ?

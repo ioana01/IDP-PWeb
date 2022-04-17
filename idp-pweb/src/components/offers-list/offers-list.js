@@ -18,7 +18,7 @@ class OffersList extends Component {
 
     render() {
         return (
-            <div class="grid grid-cols-6 gap-0">
+            <div className="grid grid-cols-6 gap-0">
                 <SideMenu/>
                 <div className="card-list col-span-4">
                     <SearchBar/>
