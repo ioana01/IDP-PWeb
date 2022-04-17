@@ -1,0 +1,43 @@
+.card-container {
+    /* width: 45%; */
+    margin-bottom: 20px;
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.save-icon:hover {
+    cursor: pointer;
+} 
+
+.card-title-h1 {
+    font-size: 30px;
+}
+
+.card-section {
+    display: flex;
+    align-items: baseline;
+}
+
+.card-section i {
+    margin-right: 5px;
+}
+
+.info-section-card {
+    padding-top: 25px;
+}
+
+.more-info-btn {
+    background-color: #6C63FF;
+    color: #fff;
+    margin-left: 1.5rem;
+    border-radius: 10px;
+    padding-top: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.more-info-btn:hover {
+    background-color: #645cf1;
+}
