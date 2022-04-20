@@ -10,3 +10,9 @@
     width: 30px;
     font-weight: bold;
 }
+
+@media (max-width: 520px) {
+    .quantity-input {
+        width: 2rem;
+    }
+}

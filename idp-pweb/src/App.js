@@ -8,6 +8,7 @@ import PrivateRoute from './components/private-route/private-route';
 import About from './components/about/about';
 import OfferForm from './components/offer-form/offer-form';
 import OffersList from './components/offers-list/offers-list';
+import MoreInfoOffer from './components/more-info-offer/more-info-offer';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route exact path="/" component={About} />
               <Route exact path="/offer" component={OfferForm} />
               <Route exact path="/offers" component={OffersList} />
+              <Route exact path="/more-info/offer/:id" component={MoreInfoOffer} />
             </Switch>
           </AuthProvider> 
         </Router>
