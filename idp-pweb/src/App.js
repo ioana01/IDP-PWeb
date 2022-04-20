@@ -9,6 +9,7 @@ import About from './components/about/about';
 import OfferForm from './components/offer-form/offer-form';
 import InfoPage from './components/info-page/InfoPage';
 import OffersList from './components/offers-list/offers-list';
+import MoreInfoOffer from './components/more-info-offer/more-info-offer';
 import RequestsList from './components/requests-list/requests-list';
 import AccountSettings from './components/account-settings/account-settings';
 import NotificationsPage from './components/notifications-page/notifications-page';
@@ -26,6 +27,7 @@ function App() {
               <Route exact path="/" component={About} />
               <Route exact path="/offer" component={OfferForm} />
               <Route exact path="/offers" component={OffersList} />
+              <Route exact path="/more-info/offer/:id" component={MoreInfoOffer} />
               <Route exact path="/requests" component={RequestsList} />
               <Route exact path="/info" component={InfoPage} />
               <Route exact path="/account" component={AccountSettings} />

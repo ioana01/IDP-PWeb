@@ -1,10 +1,32 @@
-.card-list {
-    /* background-color: green; */
-}
-
 .cards-container {
     width: 80%;
     margin-left: 10%;
-    /* display: flex; */
     justify-content: space-between;
+}
+
+.add-wrapper {
+    width: 80%;
+    margin-left: 10%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+    margin-bottom: 30px;
+}
+
+.add-wrapper:hover {
+    cursor: pointer;
+}
+
+.add-sign {
+    background-color: #6C63FF;
+    color: #fff;
+    margin-left: 1.5rem;
+    border-radius: 10px;
+    padding: 8px 20px;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+}
+
+.add-sign:hover {
+    background-color: #645cf1;
 }

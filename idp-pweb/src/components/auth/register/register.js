@@ -96,7 +96,7 @@ export default function SignUp() {
                     }
                     {currentStep[0] === 0 || currentStep === 0 ?
                         <button className='register-submit-button' onClick={updateStep}>Next</button> :
-                        <button className='register-submit-button' onClick={setGroupDescription} type='submit'>Register</button>}
+                        <button className='register-submit-button' id='register-btn' onClick={setGroupDescription} type='submit'>Register</button>}
                 </form>
             </div>
         </>

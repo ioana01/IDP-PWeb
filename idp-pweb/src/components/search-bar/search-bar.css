@@ -8,3 +8,9 @@
     width: 80%;
     margin-bottom: 2rem;
 }
+
+@media (max-width: 640px) {
+    .search-container {
+        margin-top: 50px;
+    }
+}

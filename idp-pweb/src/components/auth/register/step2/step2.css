@@ -19,3 +19,13 @@
 .input-group {
     width: 60%;
 }
+
+@media (max-width: 520px) {
+    .register-title-step2 {
+        font-size: 35px;
+    }
+
+    .quantity-input {
+        width: 2rem;
+    }
+}
