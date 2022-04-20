@@ -83,7 +83,6 @@ class OffersList extends Component {
 
     render() {
         return (
-            
             <div class="grid grid-cols-6 gap-0">
                 <SideMenu setCurrentTab={this.setCurrentTab.bind(this)}/>
                 <div className="card-list sm:col-span-4 col-span-6">
@@ -140,7 +139,6 @@ class OffersList extends Component {
                                 })}
                             </div>
                     }[this.state.currentTab]} 
-                    
                 </div>
             </div>
         )

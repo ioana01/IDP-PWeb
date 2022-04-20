@@ -31,14 +31,15 @@ class Card extends Component {
     render() {
         return (
             <div className="card-container">
-                <div class=" rounded overflow-hidden shadow-lg">
-                    <div class="px-6 info-section-card">
-                        <div class="font-bold text-xl mb-2 card-title">
+
+                <div className=" rounded overflow-hidden shadow-lg">
+                    <div className="px-6 info-section-card">
+                        <div className="font-bold text-xl mb-2 card-title">
                             <div>
                                 <h1 className="card-title-h1">{this.props.offer.title}</h1>
                                 <h2 className="card-title-h2">{this.props.offer.subtitle}</h2>
                             </div>
-                            <i class={"save-icon fa " + this.state.status} aria-hidden="true" onClick={this.saveCard.bind(this)}></i>
+                            <i className={"save-icon fa " + this.state.status} aria-hidden="true" onClick={this.saveCard.bind(this)}></i>
                         </div>
                         <div class="card-section">
                             <i class="fa fa-map-marker"></i>
@@ -54,7 +55,7 @@ class Card extends Component {
                             return <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{identifier}</span>
                         })}
                     </div>
-                    {/* <button className="px-6 pb-2 more-info-btn">More</button> */}
+                    
                     <div className="pb-2 link-card-container">
                         <Link className="px-6 pb-2 more-info-btn" to={{pathname: `/more-info/offer/${this.props.offer.id}`}}> More info </Link>
                     </div>
