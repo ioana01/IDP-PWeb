@@ -21,7 +21,7 @@ except:
 
 # current offer id
 id_offer = 0
-
+id_request = 0
 
 ########################################################################
 
@@ -53,11 +53,55 @@ def post_offers():
         print(ex)
         return Response(status=409)
 
+@app.route('/api/requests', methods=['POST'])
+def post_requests():
+    global id_request
+    # get payload from request
+    payload = request.get_json()
+    print(payload)
+
+    try:
+        id_request += 1
+        offer = {
+            'id': id_request,
+            'title': payload['title'],
+            'subtitle': payload['subtitle'],
+            'location': payload['location'],
+            'description': payload['description'],
+            'identifiers': payload['identifiers'],
+            'author': payload['author']
+        }
+
+        dbResponse = db.requests.insert_one(offer)
+        
+        return Response(status=201)
+    except Exception as ex:
+        print(ex)
+        return Response(status=409)
+
 @app.route('/api/offers', methods=['GET'])
 def get_offers():
     try:
         # get all the offers from the database
         data = list(db.offers.find())
+
+        # remove the '_id' field inserted by mongoDB 
+        for elem in data:
+            elem.pop('_id', None)
+
+        response = jsonify(data)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+
+        return response, 200
+    except Exception as ex:
+        print(ex)
+        return Response(status=500)
+
+@app.route('/api/requests', methods=['GET'])
+def get_requests():
+    try:
+        # get all the offers from the database
+        data = list(db.requests.find())
 
         # remove the '_id' field inserted by mongoDB 
         for elem in data:

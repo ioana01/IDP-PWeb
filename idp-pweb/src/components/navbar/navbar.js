@@ -45,7 +45,7 @@ export default function BootstrapNavbar() {
                     <a href="/offers" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         Offers
                     </a>
-                    <a href="/myRequests" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
+                    <a href="/requests" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         My requests
                     </a>
                     <a href="/info" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
