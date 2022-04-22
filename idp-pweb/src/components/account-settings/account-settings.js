@@ -48,7 +48,7 @@ export default function AccountSettings() {
 
     return (
         <div className='flex flex-row items-center'>
-            <div className='w-2/4 p-4'>
+            <div className='sm:w-full md:w-2/4 p-4'>
                 <div className="text-xl font-bold mb-4 border-b-[1px] border-gray">
                     <span>Account Settings</span>
                     <div className="pb-4"></div>
@@ -78,7 +78,7 @@ export default function AccountSettings() {
                     </div>
                     <span className="text-xs mt-2 pb-4">Phone number is important because you might be contacted by other users. </span>
                 </div>
-                <div className="mt-4 flex flex-col text-justify">
+                <div className="mt-4 flex flex-col text-justify border-b-[1px] border-gray">
                     <span className="font-bold">Group description (this section applies in case of refugees) </span>
                     <div className='pb-2'>
                         <div className='flex flex-row justify-between mt-1'>
@@ -115,12 +115,11 @@ export default function AccountSettings() {
                         </div>
                     </div>
                 </div>
+                <button className='md:invisible bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button>
             </div>
-            <div className='w-2/4 h-full flex flex-col items-center'>
+            <div className='w-0 md:w-2/4 h-full flex flex-col items-center invisible md:visible'>
                 <img src={profile} alt="profile" className="w-96 mb-4"/>
-                <div>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button>
-                </div>
+                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button>
             </div>
         </div>
     )

@@ -12,7 +12,7 @@ export default function RequestsList(){
             <div className="grid grid-cols-6 gap-0">
                 <SideMenu/>
                 <div className="card-list col-span-4">
-                    <SearchBar/>
+                    {/* <SearchBar/> */}
                     <div className="cards-container lg:columns-2 gap-8">
                         <Card addNewSavedItem={addNewSavedItem}/>
                         <Card addNewSavedItem={addNewSavedItem}/>
