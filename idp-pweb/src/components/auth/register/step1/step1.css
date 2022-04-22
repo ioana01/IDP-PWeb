@@ -46,4 +46,19 @@ select {
 .register-option {
     color: #676464;
 }
+
+@media (max-width: 550px) {
+    .register-title {
+        font-size: 35px;
+    }
+
+    .register-input-wrapper {
+        width: 80%;
+        margin-left: 10%;
+    }
+
+    .register-submit-button {
+        width: 80%;
+    }
+}
   

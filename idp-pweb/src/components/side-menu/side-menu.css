@@ -17,3 +17,11 @@
     height: calc(100vh - 80px);
     border-right: 1.5px solid #C4C4C4;
 }
+
+@media (max-width: 640px) {
+    .side-menu {
+        height: 100%;
+        border-right: none;
+        text-align: center;
+    }
+}

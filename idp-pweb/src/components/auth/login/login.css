@@ -79,3 +79,34 @@
 .register-link {
     border-bottom: 2px solid #676464;
 }
+
+@media (max-width: 1024px) {
+    .side-photo {
+        display: none;
+    }
+
+    .profile-pic {
+        width: 10%;
+        height: 10%;
+    }
+
+    .login-input-wrapper {
+        width: 60%;
+        margin-left: 20%;
+    }
+
+    .submit-button {
+        width: 60%;
+    }
+}
+
+@media (max-width: 600px) {
+    .login-input-wrapper {
+        width: 75%;
+        margin-left: 12.5%;
+    }
+
+    .submit-button {
+        width: 75%;
+    }
+}
