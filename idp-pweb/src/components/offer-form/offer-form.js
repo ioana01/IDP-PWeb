@@ -40,7 +40,7 @@ class OfferForm extends Component {
     render() {
 
         return (
-            <form className="offer-container">
+            <div className="offer-container">
                 <h2 className="offer-title">Create an offer</h2>
                 <input className="offer-form-input" placeholder="Title" id='title' name='title'></input>
                 <input className="offer-form-input" placeholder="Subtitle" id='subtitle' name='subtitle'></input>
@@ -56,7 +56,7 @@ class OfferForm extends Component {
                 <div className="button-container">
                     <button className="offer-submit-btn" onClick={this.handleSubmit.bind(this)}>Submit</button>
                 </div>
-            </form>
+            </div>
         )
     }
 }

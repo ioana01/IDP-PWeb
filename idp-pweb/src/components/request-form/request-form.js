@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { auth } from "../../firebase";
+import { postRequest } from '../../contexts/apis';
 import './request-form.css';
 
 export default function RequestForm() {
@@ -24,7 +26,18 @@ export default function RequestForm() {
         setIdentifierText(identifiers.join(' '));
     }, [identifiers]);
 
-    const submitRequest = () => console.log("Submit request");
+    const submitRequest = () => {
+        const requestData = {
+            title: requestTile,
+            subtitle: requestSubtitle,
+            location: location,
+            description: description,
+            identifiers: identifiers,
+            author: auth.currentUser.email,
+        }
+
+        postRequest(requestData);
+    };
 
     return (
             <div className="flex flex-col request-container p-4 items-center">
