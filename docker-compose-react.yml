@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  frotend-react:
+    image: stefanpopa99/frontend-react:latest
+    ports:
+      - 3001:3000
+    networks:
+      - internal
+    depends_on:
+      - backend-flask
+
+  backend-flask:
+    image: stefanpopa99/backend-flask:latest
+    ports:
+      - 7020:7020
+    networks:
+      - internal
+    depends_on:
+      - mongo-database
+
+  mongo-database:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: internal
