@@ -3,70 +3,55 @@ import { Link } from "react-router-dom";
 import './step2.css';
 import QuantityChange from "./quantity-change/quantity-change";
 
-class Step2 extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            adults: 0,
-            children: 0,
-            elders: 0,
-            pets: 0
-        }
-    }
-
-    addButton(id) {
-        document.getElementById(id).value = parseInt(document.getElementById(id).value) + 1;
-    }
-
-    decreaseButton(id) {
-        const currentQuantity = parseInt(document.getElementById(id).value);
-        document.getElementById(id).value = currentQuantity > 0 ? currentQuantity - 1 : 0;
-    }
-
-    render() {
-        return(
-            <>
-                <h2 className="register-title-step2">Describe your group</h2>
-                <div className="input-group">
-                    <div className="quantity-wrapper">
-                        <label className="category-label">Adults (18 - 65)</label>
-                        <QuantityChange
-                            addButton={this.addButton.bind(this)}
-                            decreaseButton={this.decreaseButton.bind(this)}
-                            id='adults'
-                        ></QuantityChange> 
-                    </div>
-
-                    <div className="quantity-wrapper">
-                        <label className="category-label">Children ({"<"} 18)</label>
-                        <QuantityChange
-                            addButton={this.addButton.bind(this)}
-                            decreaseButton={this.decreaseButton.bind(this)}
-                            id='children'
-                        ></QuantityChange>  
-                    </div>
-
-                    <div className="quantity-wrapper">
-                        <label className="category-label">Elders ({">"} 65)</label>
-                        <QuantityChange
-                            addButton={this.addButton}
-                            decreaseButton={this.decreaseButton.bind(this)}
-                            id='elders'
-                        ></QuantityChange>                       
-                    </div>
-
-                    <div className="quantity-wrapper">
-                        <label className="category-label">Pets</label>
-                        <QuantityChange
-                            addButton={this.addButton}
-                            decreaseButton={this.decreaseButton.bind(this)}
-                            id='pets'
-                        ></QuantityChange>                       
-                    </div>
+export default function Step2(props) {
+    return(
+        <div>
+            <h2 className="register-title-step2">Describe your group</h2>
+            <div className="input-group">
+                <div className="quantity-wrapper">
+                    <span className="category-label mr-2">Adults (18 - 65)</span>
+                    <QuantityChange
+                        addButton={props.increaseGroupMember}
+                        decreaseButton={props.decreaseGroupMember}
+                        member="adults"
+                        value={props.adults}
+                        id='adults'
+                    ></QuantityChange> 
                 </div>
-            </>
-        )
-    }
-}
 
-export default Step2;
+                <div className="quantity-wrapper">
+                    <span className="category-label mr-2">Children ({"<"} 18)</span>
+                    <QuantityChange
+                        addButton={props.increaseGroupMember}
+                        decreaseButton={props.decreaseGroupMember}
+                        member="children"
+                        value={props.children}
+                        id='children'
+                    ></QuantityChange>  
+                </div>
+
+                <div className="quantity-wrapper">
+                    <span className="category-label mr-2">Elders ({">"} 65)</span>
+                    <QuantityChange
+                        addButton={props.increaseGroupMember}
+                        decreaseButton={props.decreaseGroupMember}
+                        member="elders"
+                        value={props.elders}
+                        id='elders'
+                    ></QuantityChange>                       
+                </div>
+
+                <div className="quantity-wrapper">
+                    <span className="category-label mr-2">Pets</span>
+                    <QuantityChange
+                        addButton={props.increaseGroupMember}
+                        decreaseButton={props.decreaseGroupMember}
+                        member="pets"
+                        value={props.pets}
+                        id='pets'
+                    ></QuantityChange>                       
+                </div>
+            </div>
+        </div>
+        )
+}

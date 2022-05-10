@@ -6,13 +6,28 @@ import datetime
 import pika
 import time
 from flask_cors import CORS
+from pyrebase import pyrebase
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
+firebase_config = {
+    "apiKey": "AIzaSyDYe4KcRYqda6X2mNSP_Vg1S0DdIYxUB5g",
+    "authDomain": "idp-pweb.firebaseapp.com",
+    "databaseURL": "https://idp-pweb-default-rtdb.europe-west1.firebasedatabase.app",
+    "projectId": "idp-pweb",
+    "storageBucket": "idp-pweb.appspot.com",
+}
+
+firebase = pyrebase.initialize_app(firebase_config)
+auth = firebase.auth()
+user = auth.sign_in_with_email_and_password('andrei.popa21999@gmail.com', "12345678")
+print(user['idToken'])
+print(auth.get_account_info(user['idToken']))
+
 try:
     mongo = pymongo.MongoClient(
-        host='mongo-database',
+        host='localhost',
         port=27017
     )
     db = mongo.pweb
@@ -28,6 +43,8 @@ id_request = 0
 id_profile = 0
 
 ########################################################################
+
+
 @app.route('/add-job/<cmd>')
 def add(cmd):
     try:
