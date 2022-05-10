@@ -26,6 +26,7 @@ export default function Login() {
             await login(usernameRef.current.value, passwordRef.current.value);
             console.log(auth.currentUser);
             localStorage.setItem("token", auth.currentUser.auth.currentUser.accessToken);
+            localStorage.setItem("email", auth.currentUser.email);
             history.push("/")
             setQueryStatus({ error: "", success: "Authentication succesful!", loading: false });
         } catch(error) { 

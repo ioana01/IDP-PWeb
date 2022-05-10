@@ -7,6 +7,7 @@ import pika
 import time
 from flask_cors import CORS
 from pyrebase import pyrebase
+from bson import json_util
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
@@ -91,8 +92,15 @@ def add(cmd):
 
 @app.route('/api/update-profile', methods=['POST'])
 def update_profile():
+    updateData = request.json()
     profile_payload = request.get_json()
     jwtToken = request.headers.get('Authorization')
+    try:
+        user = db.profiles.find_one_and_replace({'email': updateData['email']}, profile_payload)
+        return jsonify({'message: ': 'Update profile was succesful'}), 200
+    except Exception as e:
+        print(e)
+
     return jsonify({'message: ': 'Profile updated'}), 200
 
 
@@ -108,8 +116,13 @@ def get_profile():
     args = request.args
     args = args.to_dict()
     jwtToken = request.headers.get('Authorization')
-    print(args.get('email'))
-    return jsonify({'message: ': 'Getting profile details...'}), 200
+    try:
+        response = db.profiles.find_one({"email": args['email']})
+        response = json_util.dumps(response)
+        return response, 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Error getting profile information'}), 400
 
 
 @app.route('/api/profile', methods=['POST'])

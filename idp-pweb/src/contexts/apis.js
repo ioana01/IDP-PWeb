@@ -280,7 +280,7 @@ export const getProfile = (profileData, token, success, failure) => {
         }
     })
     .then((response) => {
-        success(response);
+        success(response.data);
     }, (error) => {
         failure(error);
     });

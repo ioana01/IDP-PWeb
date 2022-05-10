@@ -52,14 +52,41 @@ export default function AccountSettings() {
     }
 
 
-    useEffect(() => {
-        setProfile({
-            email: 'andrei.popa2199@gmail.com', name: 'Stefan Popa',
-            phone: '0771 666 444', userType: 'provider',
-            group: { adults: 0, children: 1, elders: 3, pets: 1 }
-        });
-    }, []);
+    const updateProfileDetails = () => {
 
+    }
+    const successUpdateProfile = (success) => {
+        console.log('Success update profile');
+    }
+    const failureUpdateProfile = (failure) => {
+        console.log('Failure update profile');
+    }
+
+    const getProfileDetails = () => {
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
+        getProfile({'email' : email}, token, successProfileDetails, failureProfileDetails);
+    }
+    const successProfileDetails = (success) => {
+        setProfile({
+            email: success.email,
+            name: success.name,
+            phone: success.phone,
+            userType: success.userType,
+            group: {
+                adults: success.group.adults,
+                children: success.group.children,
+                elders: success.group.elders,
+                pets: success.group.pets
+            }
+        });
+    }
+    const failureProfileDetails = (failure) => {
+        console.log('Failure profile details');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => getProfileDetails(), []);
 
     return (
         <div className='flex flex-row items-center'>
