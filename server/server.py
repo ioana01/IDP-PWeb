@@ -3,6 +3,7 @@ from flask.json import jsonify
 from bson.objectid import ObjectId
 import pymongo
 import datetime
+import pika
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -22,8 +23,50 @@ except:
 # current offer id
 id_offer = 0
 id_request = 0
+id_profile = 0
 
 ########################################################################
+@app.route('/add-job/<cmd>')
+def add(cmd):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='task_queue', durable=True)
+    channel.basic_publish(
+        exchange='',
+        routing_key='task_queue',
+        body=cmd,
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    connection.close()
+    return " [x] Sent: %s" % cmd
+
+
+@app.route('/api/profile', methods=['POST'])
+def post_profile():
+    profile_payload = request.get_json()
+    print(profile_payload)
+
+    global id_profile
+
+    try:
+        profile = {
+            'id': id_profile,
+            'name': profile_payload['name'],
+            'email': profile_payload['email'],
+            'phone': profile_payload['phone'],
+            'userType': profile_payload['userType'],
+            'group': profile_payload['group'],
+            'createdAt': datetime.datetime.now(),
+        }
+
+        db.profiles.insert_one(profile)
+        id_profile += 1
+        return jsonify({'message': 'Profile created successfully'}), 201
+    except Exception as ex:
+        print(ex)
+        return jsonify({'message': 'Error creating profile'}), 400
+
 
 @app.route('/api/offers', methods=['POST'])
 def post_offers():
