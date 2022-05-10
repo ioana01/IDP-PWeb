@@ -217,13 +217,14 @@ export const getRequestById = (id, success, self) => {
     )
 }
 
-export const postProfile = (profileData, success, failure) => {
+export const postProfile = (profileData, token, success, failure) => {
     axios({
         method: 'post',
         url: postProfileURL,
         data: profileData,
         headers: {
-          'content-type': 'application/json; charset=utf-8'
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         }
   })
   .then((response) => {

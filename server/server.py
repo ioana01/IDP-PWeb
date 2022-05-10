@@ -1,5 +1,6 @@
 from flask import Flask, Response, request
 from flask.json import jsonify
+import json
 import pymongo
 import datetime
 import pika
@@ -20,13 +21,10 @@ firebase_config = {
 
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
-user = auth.sign_in_with_email_and_password('andrei.popa21999@gmail.com', "12345678")
-print(user['idToken'])
-print(auth.get_account_info(user['idToken']))
 
 try:
     mongo = pymongo.MongoClient(
-        host='mongo-database',
+        host='localhost',
         port=27017
     )
     db = mongo.pweb
@@ -43,15 +41,41 @@ id_profile = 0
 
 ########################################################################
 
+def publish_verify_email(email, idToken):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+    channel = connection.channel()
+    channel.queue_declare(queue='verify_email_queue', durable=True)
+    channel.basic_publish(
+        exchange='',
+        routing_key='verify_email_queue',
+        body=json.dumps({'email': email, 'idToken': idToken}),
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    connection.close()
+    return '  [x] Publishing verification email for %s' % email
+
+
+def publish_reset_password(email):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+    channel = connection.channel()
+    channel.queue_declare(queue='reset_password_queue', durable=True)
+    channel.basic_publish(
+        exchange='',
+        routing_key='reset_password_queue',
+        body=email,
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    connection.close()
+    return '  [x] Publishing reset password for %s' % email
+
+
+########################################################################
 
 @app.route('/add-job/<cmd>')
 def add(cmd):
-    try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
-    except pika.exceptions.AMQPConnectionError as exc:
-        print("Failed to connect to RabbitMQ service. Message wont be sent.")
-        return    
-    
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost")) 
     channel = connection.channel()
     channel.queue_declare(queue='task_queue', durable=True)
     channel.basic_publish(
@@ -68,7 +92,7 @@ def add(cmd):
 @app.route('/api/profile', methods=['POST'])
 def post_profile():
     profile_payload = request.get_json()
-    print(profile_payload)
+    jwtToken = request.headers['Authorization']
 
     global id_profile
 
@@ -85,6 +109,9 @@ def post_profile():
 
         db.profiles.insert_one(profile)
         id_profile += 1
+
+        publish_verify_email(profile_payload['email'], jwtToken)
+
         return jsonify({'message': 'Profile created successfully'}), 201
     except Exception as ex:
         print(ex)

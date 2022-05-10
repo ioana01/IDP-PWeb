@@ -7,16 +7,17 @@ import './register.css';
 import registerPhoto from './register-photo.svg';
 import Step1 from "./step1/step1";
 import Step2 from "./step2/step2";
+import { auth } from "../../../firebase";
 
 export default function SignUp() {
-    const { signup, login } = useAuth();
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const { signup } = useAuth();
     const history = useHistory();
 
     const [currentStep, setStep] = useState(0);
     const [currentButton, setCurrentButton] = useState('next');
 
+    const [queryStatus, setQueryStatus] = useState({ 
+        error: "", success: "", loading: false });
     const [newUser, setNewUser] = useState({
         name: '',
         email: '',
@@ -30,6 +31,26 @@ export default function SignUp() {
             pets: 0
         }
     });
+
+    const validateFirstStep = () => {
+        const errors = [];
+        if (newUser.name === '') {
+            errors.push('Please enter your name');
+        }
+        if (newUser.email === '') {
+            errors.push('Please enter your email');
+        }
+        if (newUser.phone === '') {
+            errors.push('Please enter your phone number');
+        }
+        if (newUser.userType === '') {
+            errors.push('Please enter your user type');
+        }
+        if (newUser.password === '') {
+            errors.push('Please enter your password');
+        }
+        return errors;
+    }
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -45,19 +66,33 @@ export default function SignUp() {
 
             try {
               await signup(newUser.email, newUser.password);
-              postProfile(userData, succesPostProfile, failurePostProfile);
+              postProfile(userData, auth.currentUser.auth.currentUser.accessToken, succesPostProfile, failurePostProfile);
             } catch(error) {
-                console.log("Profile creation failed");
+                setQueryStatus({
+                    error: "Profile creation failed!", 
+                    success: "", 
+                    loading: false 
+                });
             }
         }
     }
 
     const succesPostProfile = () => {
-        console.log("Profile created");
+        localStorage.setItem("token", auth.currentUser.auth.currentUser.accessToken);
+        localStorage.setItem("email", newUser.email);
+        setQueryStatus({ 
+            error: "", 
+            success: "Profile created successfully!", 
+            loading: false 
+        });
         history.push("/");
     }
-    const failurePostProfile = (failure) => {
-        console.log("Profile creation failed");
+    const failurePostProfile = () => {
+        setQueryStatus({ 
+            error: "Profile creation failed!", 
+            success: "", 
+            loading: false 
+        });
     }
 
     const handleNameChange = (value) => setNewUser({...newUser, name: value });
@@ -66,7 +101,23 @@ export default function SignUp() {
     const handleUserTypeChange = (value) => setNewUser({...newUser, userType: value });
     const handlePasswordChange = (value) => setNewUser({...newUser, password: value });
 
-    const updateStep= () => setStep((currentStep + 1));
+    const updateStep= () => {
+        const errors = validateFirstStep();
+        if(errors.length === 0) {
+            setStep((currentStep + 1));
+            setQueryStatus({
+                error: "",
+                success: "",
+                loading: false
+                });
+        } else {
+            setQueryStatus({
+                error: errors[0],
+                success: "",
+                loading: false
+            });
+        }
+    }
     useEffect(() => setCurrentButton(currentStep === 0 ? 'next' : 'submit'), [currentStep]);
 
     const increaseGroupMember = (member) => {
@@ -124,6 +175,12 @@ export default function SignUp() {
                         <button className='register-submit-button' onClick={updateStep}>Next</button> :
                         <button className='register-submit-button' id='register-btn' 
                         onClick={handleSubmit} type='submit'>Register</button>}
+                    <div className="mt-4 mb-4">
+                        {queryStatus.error && <div className="text-red-600">{queryStatus.error}</div>}
+                    </div>
+                    <div className="mb-4">
+                        {queryStatus.success && <div className="text-green-600">{queryStatus.success}</div>}
+                    </div>
                 </div>
             </div>
         </div>

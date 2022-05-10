@@ -10,8 +10,9 @@ export default function Login() {
     const usernameRef = useRef();
     const passwordRef = useRef(); 
     const { login } = useAuth();
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+
+    const [queryStatus, setQueryStatus] = useState({ 
+        error: "", success: "", loading: false });
     const history = useHistory();
    
     function handleLogIn(e) {
@@ -22,23 +23,19 @@ export default function Login() {
     async function handleSubmit(e) {
         e.preventDefault()
         try {
-            // setError("");
-            // setLoading(true);
             await login(usernameRef.current.value, passwordRef.current.value);
             console.log(auth.currentUser);
+            localStorage.setItem("token", auth.currentUser.auth.currentUser.accessToken);
             history.push("/")
+            setQueryStatus({ error: "", success: "Authentication succesful!", loading: false });
         } catch(error) { 
-          setError(error.message);
+          setQueryStatus({ 
+              error: "Authentication failed. Wrong credentials.", 
+              success: "", 
+              loading: false 
+          });
         }
-    
-        setLoading(false);
     }
-
-    const successGetProfile = (data) => {
-    }
-    const failureGetProfile = (failure) => {
-    }
-
     
     return (
         <div>
@@ -49,8 +46,7 @@ export default function Login() {
                 <form className="login-form" onSubmit={handleLogIn}>
                     <img src={profilePic} className="profile-pic" alt="profilePic"/>
                     <h2 className="login-title">WELCOME</h2>
-                    
-                    <div className="section">
+                    <div className="section mt-4">
                         <div className="login-input-wrapper">
                             <i className="fa fa-user font-awesome-icon"></i>
                             <input className="custom-input" type="text" id="username" 
@@ -67,7 +63,13 @@ export default function Login() {
                     </div>
 
                     <button className='submit-button' type='submit'>Submit</button>
-                    <div className="w-100 text-center mt-2">
+                    <div className="mt-4 mb-4">
+                        {queryStatus.error && <div className="text-red-600">{queryStatus.error}</div>}
+                    </div>
+                    <div>
+                        {queryStatus.success && <div className="text-green-600">{queryStatus.success}</div>}
+                    </div>
+                    <div className="w-100 text-center">
                         No account? <Link to="/register" className="register-link">Register</Link>
                     </div>
                 </form>
