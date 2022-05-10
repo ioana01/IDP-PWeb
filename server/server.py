@@ -89,6 +89,29 @@ def add(cmd):
     return " [x] Sent: %s" % cmd
 
 
+@app.route('/api/update-profile', methods=['POST'])
+def update_profile():
+    profile_payload = request.get_json()
+    jwtToken = request.headers.get('Authorization')
+    return jsonify({'message: ': 'Profile updated'}), 200
+
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    email = request.get_json()['email']
+    publish_reset_password(email)
+    return jsonify({'message: ': 'Password reset email sent'}), 200
+
+
+@app.route('/api/profile', methods=['GET'])
+def get_profile():
+    args = request.args
+    args = args.to_dict()
+    jwtToken = request.headers.get('Authorization')
+    print(args.get('email'))
+    return jsonify({'message: ': 'Getting profile details...'}), 200
+
+
 @app.route('/api/profile', methods=['POST'])
 def post_profile():
     profile_payload = request.get_json()
@@ -116,6 +139,8 @@ def post_profile():
     except Exception as ex:
         print(ex)
         return jsonify({'message': 'Error creating profile'}), 400
+
+
 
 
 @app.route('/api/offers', methods=['POST'])

@@ -50,8 +50,10 @@ def verify_email_callback(ch, method, properties, body):
         print(" [x] Verifying email for %s..." % payload['email'])
         auth.send_email_verification(payload['idToken'])
         print(" [x] Done")
+        ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
         print(" [x] Email verification could not be performed!")
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 def reset_password_callback(ch, method, properties, body):
@@ -60,8 +62,10 @@ def reset_password_callback(ch, method, properties, body):
         payload = body.decode()
         auth.send_password_reset_email(payload)
         print(payload)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
         print(" [x] Password reset could not be performed!")
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 channel.basic_qos(prefetch_count=1)
