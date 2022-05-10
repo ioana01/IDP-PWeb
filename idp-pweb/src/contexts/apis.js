@@ -1,4 +1,4 @@
-import { data } from "jquery";
+const axios = require('axios');
 
 const apiURL = 'http://localhost:7020';
 const postOfferURL = apiURL + '/api/offers';
@@ -12,6 +12,8 @@ const putRequestURL = apiURL + '/api/requests';
 const deleteFavoriteURL = apiURL + '/api/favorites';
 const getOfferByIdURL = apiURL + '/api/offers';
 const getRequestByIdURL = apiURL + '/api/requests';
+const postProfileURL = apiURL + '/api/profile';
+const getProfileURL = apiURL + '/api/profile';
 
 export const getOffers = (success, scope) => {
     fetch(getOfferURL, {
@@ -31,6 +33,7 @@ export const getOffers = (success, scope) => {
         error => console.log(error)
     )
 }
+
 export const getRequests = (success, scope) => {
     fetch(getRequestURL, {
         headers : { 
@@ -67,6 +70,7 @@ export const postOffer = (offerData) => {
         error => console.log(error)
     )
 }
+
 export const postRequest = (requestData) => {
     fetch(postRequestURL, {
         method: 'post',
@@ -139,6 +143,7 @@ export const putOffer = (data, id) => {
         error => console.log(error)
     )
 }
+
 export const putRequest = (data, id) => {
     fetch(`${putRequestURL}/${id}`, {
         method: 'put',
@@ -192,6 +197,7 @@ export const getOfferById = (id, success, self) => {
         error => console.log(error)
     )
 }
+
 export const getRequestById = (id, success, self) => {
     fetch(`${getRequestByIdURL}/${id}`, {
         headers : { 
@@ -209,4 +215,34 @@ export const getRequestById = (id, success, self) => {
     .catch(
         error => console.log(error)
     )
+}
+
+export const postProfile = (profileData, success, failure) => {
+    axios({
+        method: 'post',
+        url: postProfileURL,
+        data: profileData,
+        headers: {
+          'content-type': 'application/json; charset=utf-8'
+        }
+  })
+  .then((response) => {
+      success(response);
+  }, (error) => {
+      failure(error);
+  });
+}
+export const getProfile = (profileData, success, failure) => {
+    axios({
+        method: 'get',
+        url: getProfileURL,
+        headers: {
+          'content-type': 'application/json; charset=utf-8'
+        }
+    })
+    .then((response) => {
+        success(response);
+    }, (error) => {
+        failure(error);
+    });
 }

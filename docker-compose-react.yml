@@ -2,29 +2,60 @@ version: '3.7'
 
 services:
   frotend-react:
-    image: stefanpopa99/frontend-react:latest
+    container_name: fe
+    build:
+      context: ./idp-pweb
+      dockerfile: Dockerfile
     ports:
       - 3001:3000
     networks:
       - internal
     depends_on:
-      - backend-flask
+      - "backend-flask"
 
   backend-flask:
-    image: stefanpopa99/backend-flask:latest
+    container_name: be
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     ports:
       - 7020:7020
     networks:
       - internal
     depends_on:
-      - mongo-database
+      - "mongo-database"
+
+  worker-python:
+    container_name: wp
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    ports:
+      - 9999:9999
+    networks:
+      - internal
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - "rabbitmq"
 
   mongo-database:
     image: mongo:latest
+    hostname: mongo-database
     ports:
       - 27017:27017
     volumes:
       - ./mongo-data:/data/db
+    networks:
+      - internal
+    depends_on:
+      - "rabbitmq"
+
+  rabbitmq:
+    image: 'rabbitmq:management-alpine'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
     networks:
       - internal
 

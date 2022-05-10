@@ -1,11 +1,14 @@
 import pika
 import time
 
+time.sleep(15)
+
 print(' [*] Connecting to server ...')
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
+
 channel = connection.channel()
 channel.queue_declare(queue='task_queue', durable=True)
-
 print(' [*] Waiting for messages.')
 
 

@@ -4,21 +4,26 @@ from bson.objectid import ObjectId
 import pymongo
 import datetime
 import pika
+import time
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
 try:
+    print('Server sleeping...')
+    time.sleep(10)
     mongo = pymongo.MongoClient(
-        host='localhost',
+        host='mongo-database',
         port=27017,
         serverSelectionTimeoutMS = 1000
     )
     db = mongo.pweb
     mongo.server_info() # Trigger exception if cannot connect to db
-except:
-    print('Error - Cannot connect to db')
+    print('Succesfull connected to mongo')
+except Exception as e:
+    print(e)
+    print('Error - Cannot connect to dbbb')
 
 # current offer id
 id_offer = 0
@@ -28,7 +33,12 @@ id_profile = 0
 ########################################################################
 @app.route('/add-job/<cmd>')
 def add(cmd):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    try:
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
+    except pika.exceptions.AMQPConnectionError as exc:
+        print("Failed to connect to RabbitMQ service. Message wont be sent.")
+        return    
+    
     channel = connection.channel()
     channel.queue_declare(queue='task_queue', durable=True)
     channel.basic_publish(
