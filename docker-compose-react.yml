@@ -2,6 +2,8 @@ version: '3.7'
 
 services:
   frotend-react:
+    depends_on:
+      - "backend-flask"
     container_name: fe
     build:
       context: ./idp-pweb
@@ -10,10 +12,10 @@ services:
       - 3001:3000
     networks:
       - internal
-    depends_on:
-      - "backend-flask"
 
   backend-flask:
+    depends_on:
+      - "mongo-database"
     container_name: be
     build:
       context: ./server
@@ -22,10 +24,10 @@ services:
       - 7020:7020
     networks:
       - internal
-    depends_on:
-      - "mongo-database"
 
   worker-python:
+    depends_on:
+      - "rabbitmq"
     container_name: wp
     build:
       context: ./worker
@@ -36,10 +38,10 @@ services:
       - internal
     environment:
       - PYTHONUNBUFFERED=1
-    depends_on:
-      - "rabbitmq"
 
   mongo-database:
+    depends_on:
+      - "rabbitmq"
     image: mongo:latest
     hostname: mongo-database
     ports:
@@ -48,8 +50,6 @@ services:
       - ./mongo-data:/data/db
     networks:
       - internal
-    depends_on:
-      - "rabbitmq"
 
   rabbitmq:
     image: 'rabbitmq:management-alpine'

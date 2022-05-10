@@ -11,12 +11,9 @@ app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
 try:
-    print('Server sleeping...')
-    time.sleep(10)
     mongo = pymongo.MongoClient(
         host='mongo-database',
-        port=27017,
-        serverSelectionTimeoutMS = 1000
+        port=27017
     )
     db = mongo.pweb
     mongo.server_info() # Trigger exception if cannot connect to db
