@@ -1,6 +1,5 @@
 from flask import Flask, Response, request
 from flask.json import jsonify
-from bson.objectid import ObjectId
 import pymongo
 import datetime
 import pika
@@ -27,7 +26,7 @@ print(auth.get_account_info(user['idToken']))
 
 try:
     mongo = pymongo.MongoClient(
-        host='localhost',
+        host='mongo-database',
         port=27017
     )
     db = mongo.pweb
