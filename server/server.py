@@ -1,18 +1,31 @@
 from flask import Flask, Response, request
 from flask.json import jsonify
-from bson.objectid import ObjectId
+import json
 import pymongo
 import datetime
 import pika
 import time
 from flask_cors import CORS
+from pyrebase import pyrebase
+from bson import json_util
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
+firebase_config = {
+    "apiKey": "AIzaSyDYe4KcRYqda6X2mNSP_Vg1S0DdIYxUB5g",
+    "authDomain": "idp-pweb.firebaseapp.com",
+    "databaseURL": "https://idp-pweb-default-rtdb.europe-west1.firebasedatabase.app",
+    "projectId": "idp-pweb",
+    "storageBucket": "idp-pweb.appspot.com",
+}
+
+firebase = pyrebase.initialize_app(firebase_config)
+auth = firebase.auth()
+
 try:
     mongo = pymongo.MongoClient(
-        host='mongo-database',
+        host='localhost',
         port=27017
     )
     db = mongo.pweb
@@ -28,14 +41,42 @@ id_request = 0
 id_profile = 0
 
 ########################################################################
+
+def publish_verify_email(email, idToken):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+    channel = connection.channel()
+    channel.queue_declare(queue='verify_email_queue', durable=True)
+    channel.basic_publish(
+        exchange='',
+        routing_key='verify_email_queue',
+        body=json.dumps({'email': email, 'idToken': idToken}),
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    connection.close()
+    return '  [x] Publishing verification email for %s' % email
+
+
+def publish_reset_password(email):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+    channel = connection.channel()
+    channel.queue_declare(queue='reset_password_queue', durable=True)
+    channel.basic_publish(
+        exchange='',
+        routing_key='reset_password_queue',
+        body=email,
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    connection.close()
+    return '  [x] Publishing reset password for %s' % email
+
+
+########################################################################
+
 @app.route('/add-job/<cmd>')
 def add(cmd):
-    try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
-    except pika.exceptions.AMQPConnectionError as exc:
-        print("Failed to connect to RabbitMQ service. Message wont be sent.")
-        return    
-    
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost")) 
     channel = connection.channel()
     channel.queue_declare(queue='task_queue', durable=True)
     channel.basic_publish(
@@ -49,10 +90,45 @@ def add(cmd):
     return " [x] Sent: %s" % cmd
 
 
+@app.route('/api/update-profile', methods=['POST'])
+def update_profile():
+    updateData = request.json()
+    profile_payload = request.get_json()
+    jwtToken = request.headers.get('Authorization')
+    try:
+        user = db.profiles.find_one_and_replace({'email': updateData['email']}, profile_payload)
+        return jsonify({'message: ': 'Update profile was succesful'}), 200
+    except Exception as e:
+        print(e)
+
+    return jsonify({'message: ': 'Profile updated'}), 200
+
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    email = request.get_json()['email']
+    publish_reset_password(email)
+    return jsonify({'message: ': 'Password reset email sent'}), 200
+
+
+@app.route('/api/profile', methods=['GET'])
+def get_profile():
+    args = request.args
+    args = args.to_dict()
+    jwtToken = request.headers.get('Authorization')
+    try:
+        response = db.profiles.find_one({"email": args['email']})
+        response = json_util.dumps(response)
+        return response, 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Error getting profile information'}), 400
+
+
 @app.route('/api/profile', methods=['POST'])
 def post_profile():
     profile_payload = request.get_json()
-    print(profile_payload)
+    jwtToken = request.headers['Authorization']
 
     global id_profile
 
@@ -69,10 +145,15 @@ def post_profile():
 
         db.profiles.insert_one(profile)
         id_profile += 1
+
+        publish_verify_email(profile_payload['email'], jwtToken)
+
         return jsonify({'message': 'Profile created successfully'}), 201
     except Exception as ex:
         print(ex)
         return jsonify({'message': 'Error creating profile'}), 400
+
+
 
 
 @app.route('/api/offers', methods=['POST'])

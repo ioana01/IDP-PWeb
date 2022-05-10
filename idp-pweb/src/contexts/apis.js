@@ -14,6 +14,8 @@ const getOfferByIdURL = apiURL + '/api/offers';
 const getRequestByIdURL = apiURL + '/api/requests';
 const postProfileURL = apiURL + '/api/profile';
 const getProfileURL = apiURL + '/api/profile';
+const updateProfileURL = apiURL + '/api/update-profile';
+const resetPasswordUrl = apiURL + '/api/reset-password';
 
 export const getOffers = (success, scope) => {
     fetch(getOfferURL, {
@@ -217,13 +219,46 @@ export const getRequestById = (id, success, self) => {
     )
 }
 
-export const postProfile = (profileData, success, failure) => {
+export const postUpdateProfile = (updateData, token, success, failure) => {
+    axios({
+        method: 'post',
+        url: updateProfileURL,
+        data: updateData,
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response);
+    }, (error) => {
+        failure(error);
+    });
+}
+export const postResetPassword = (resetData, token, success, failure) => {
+    axios({
+        method: 'post',
+        url: resetPasswordUrl,
+        data: resetData,
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response);
+    }, (error) => {
+        failure(error);
+    });
+}
+export const postProfile = (profileData, token, success, failure) => {
     axios({
         method: 'post',
         url: postProfileURL,
         data: profileData,
         headers: {
-          'content-type': 'application/json; charset=utf-8'
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         }
   })
   .then((response) => {
@@ -232,16 +267,20 @@ export const postProfile = (profileData, success, failure) => {
       failure(error);
   });
 }
-export const getProfile = (profileData, success, failure) => {
+export const getProfile = (profileData, token, success, failure) => {
     axios({
         method: 'get',
         url: getProfileURL,
+        params: {
+            email: profileData.email
+        },
         headers: {
-          'content-type': 'application/json; charset=utf-8'
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         }
     })
     .then((response) => {
-        success(response);
+        success(response.data);
     }, (error) => {
         failure(error);
     });

@@ -1,1 +1,4 @@
 mongo-data/
+server/Lib/*
+server/Scripts/*
+
