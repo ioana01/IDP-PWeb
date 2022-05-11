@@ -5,6 +5,8 @@ from pyrebase import pyrebase
 
 time.sleep(15)
 
+RABBITMQ_HOST = 'rabbitmq'  # !! replace with 'localhost' when developing
+
 print(" [*] Initializing Firebase connection...")
 
 firebase_config = {
@@ -19,7 +21,7 @@ auth = firebase.auth()
 
 print(' [*] Connecting to server ...')
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
 
 channel = connection.channel()
 channel.queue_declare(queue='task_queue', durable=True)

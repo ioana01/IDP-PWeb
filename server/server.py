@@ -12,6 +12,9 @@ from bson import json_util
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
+RABBITMQ_HOST = 'rabbitmq'  # !! replace with 'localhost' when developing
+MONGODB_HOST = 'mongo-database' # !! replace with 'localhost' when developing
+
 firebase_config = {
     "apiKey": "AIzaSyDYe4KcRYqda6X2mNSP_Vg1S0DdIYxUB5g",
     "authDomain": "idp-pweb.firebaseapp.com",
@@ -25,7 +28,7 @@ auth = firebase.auth()
 
 try:
     mongo = pymongo.MongoClient(
-        host='localhost',
+        host=MONGODB_HOST,
         port=27017
     )
     db = mongo.pweb
@@ -43,7 +46,7 @@ id_profile = 0
 ########################################################################
 
 def publish_verify_email(email, idToken):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
     channel = connection.channel()
     channel.queue_declare(queue='verify_email_queue', durable=True)
     channel.basic_publish(
@@ -58,7 +61,7 @@ def publish_verify_email(email, idToken):
 
 
 def publish_reset_password(email):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
     channel = connection.channel()
     channel.queue_declare(queue='reset_password_queue', durable=True)
     channel.basic_publish(
@@ -76,7 +79,7 @@ def publish_reset_password(email):
 
 @app.route('/add-job/<cmd>')
 def add(cmd):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost")) 
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST)) 
     channel = connection.channel()
     channel.queue_declare(queue='task_queue', durable=True)
     channel.basic_publish(

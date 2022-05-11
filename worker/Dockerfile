@@ -1,6 +1,4 @@
-FROM alpine:edge
-
-RUN apk add --update py3-pip
+FROM python:3.7-slim
 
 WORKDIR /worker-python
 
