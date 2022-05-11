@@ -1,0 +1,16 @@
+_format_version: "2.1"
+
+services:
+  - name: be
+    url: http://be:7020/api/offers
+    routes:
+      - name: be-route
+        paths: 
+          - /api/of
+          
+  - name: rabbitmq
+    url: http://rabbitmq:15672
+    routes:
+      - name: rabbitmq-route
+        paths:
+          - /rabbitmq
