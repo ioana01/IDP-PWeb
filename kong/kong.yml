@@ -2,15 +2,17 @@ _format_version: "2.1"
 
 services:
   - name: be
-    url: http://be:7020/api/offers
+    url: http://be:7020/api
     routes:
       - name: be-route
         paths: 
-          - /api/of
+          - /api
           
-  - name: rabbitmq
-    url: http://rabbitmq:15672
-    routes:
-      - name: rabbitmq-route
-        paths:
-          - /rabbitmq
+plugins:
+  - name: rate-limiting
+    config:
+        minute: 15
+        limit_by: ip
+        policy: local
+
+  - name: bot-detection
