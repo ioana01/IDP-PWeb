@@ -16,3 +16,5 @@ plugins:
         policy: local
 
   - name: bot-detection
+  
+  - name: prometheus

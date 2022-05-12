@@ -83,6 +83,24 @@ services:
         constraints: [node.role == manager]
     networks:
       - internal
+      
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+        - ./grafana/data:/var/lib/grafana
+    ports:
+        - 3000:3000
+    networks:
+        - internal
+      
+  prometheus:
+    image: prom/prometheus
+    volumes:
+        - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
+    ports:
+        - 9090:9090
+    networks:
+        - internal
 
 networks:
   internal:
