@@ -1,0 +1,6 @@
+Flask==2.0.3
+Flask-Cors==3.0.10
+pymongo==4.1.1
+pika==1.2.1
+Pyrebase4==4.5.0
+pycryptodome==3.14.1
