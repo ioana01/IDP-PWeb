@@ -1,6 +1,7 @@
 .about-title {
     font-size: 45px;
     font-weight: bold;
+    margin-bottom: 15px;
 }
 
 .top-info {
@@ -25,7 +26,7 @@
 
 .steps {
     padding: 0 50px;
-    margin: 50px 0;
+    margin: 50px 0 30px 0;
     color: #676464;
 }
 
