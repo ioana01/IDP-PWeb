@@ -2,34 +2,42 @@ import React, { Component } from "react";
 import './about.css';
 import aboutLogo from './about-logo.svg';
 
-export function About(props){
+export default function About(props) {
     return (
-        <div>
+        <>
             <div className="lg:columns-2 gap-0 top-info">
                 <div className="about-logo">
-                    <img src={aboutLogo} alt="aboutLogo"/>
+                    <img src={aboutLogo}></img>
                 </div>
                 <div>
-                    <h2 className="about-title">Title</h2>
-                    <p className="top-info-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur consectetur ex in sagittis. Praesent venenatis nisi odio, in tristique felis hendrerit sit amet. Proin ut finibus ex. In ullamcorper vulputate volutpat. Vivamus tristique ornare lacus eu euismod. Aliquam elementum tortor egestas ex pellentesque, id aliquet tortor volutpat. Ut scelerisque metus eros, ac luctus sem ultricies sit amet. Nam dignissim aliquet neque, et aliquam ex dignissim ac.</p>
+                    <h2 className="about-title">Together for Ukraine</h2>
+                    <p className="top-info-p">
+                        Now is the time to come together to support each other. Either you are looking for 
+                        help or to lend a hand, this is the perfect place for you. Free and easy to use,
+                        this platform might help you find a solution to your needs.
+                    </p>
                 </div>    
             </div>
-            <div className="lg:columns-3 steps">
+            <div className="grid lg:grid-cols-3 md:grid-cols-3 gap-8 steps">
                 <div>
                     <h3 className="step-title">Step 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur consectetur ex in sagittis. Praesent venenatis nisi odio, in tristique felis hendrerit sit amet.</p>
+                    <p>
+                        Choose the type of account you would like to use ('I offer help' / 'I need help') and register.
+                    </p>
                 </div>
                 <div>
                     <h3 className="step-title">Step 2</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur consectetur ex in sagittis. Praesent venenatis nisi odio, in tristique felis hendrerit sit amet.</p>
+                    <p>
+                        Post a request/ an offer of help and a few details about it.
+                    </p>
                 </div>
                 <div>
                     <h3 className="step-title">Step 3</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur consectetur ex in sagittis. Praesent venenatis nisi odio, in tristique felis hendrerit sit amet.</p>
+                    <p>
+                        Contact the author of the post and stay in touch.
+                    </p>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
-
-export default About;
