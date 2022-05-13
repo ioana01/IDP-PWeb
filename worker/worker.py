@@ -5,7 +5,9 @@ from pyrebase import pyrebase
 
 time.sleep(15)
 
-RABBITMQ_HOST = 'rabbitmq'  # !! replace with 'localhost' when developing
+DEV_MODE = True
+
+RABBITMQ_HOST = RABBITMQ_HOST = 'localhost' if DEV_MODE else 'rabbitmq'
 
 print(" [*] Initializing Firebase connection...")
 

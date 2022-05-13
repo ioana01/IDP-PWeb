@@ -12,8 +12,9 @@ from bson import json_util
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
-RABBITMQ_HOST = 'rabbitmq'  # !! replace with 'localhost' when developing
-MONGODB_HOST = 'mongo-database' # !! replace with 'localhost' when developing
+DEV_MODE = True
+RABBITMQ_HOST = 'localhost' if DEV_MODE else 'rabbitmq'
+MONGODB_HOST = 'localhost' if DEV_MODE else 'mongo-database'
 
 firebase_config = {
     "apiKey": "AIzaSyDYe4KcRYqda6X2mNSP_Vg1S0DdIYxUB5g",
