@@ -1,73 +1,60 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import './more-info-offer.css';
 import moreInfoLogo from './more-info.svg';
 import { getOfferById } from '../../contexts/apis';
 
-class MoreInfoOffer extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentId: this.props.match.params.id,
-            currentOffer: {}
-        }
+export default function MoreInfoOffer(props){
+    const [currentOffer, setCurrentOffer] = useState();
+
+    useEffect(() => {
+        getOfferById({id: props.match.params.id}, 
+            successGetMoreInfo, failureGetMoreInfo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const successGetMoreInfo = (data) => {
+        setCurrentOffer(data);
+    }
+    const failureGetMoreInfo = (error) => {
+        console.log(error);
+        setCurrentOffer();
     }
 
-    componentDidMount() {
-        getOfferById(this.state.currentId, this.setCurrentOffer, this);
-    }
+    const concatIdentifiers = () => currentOffer.identifiers.join(' ');
 
-    setCurrentOffer(data, self) {
-        self.setState({ currentOffer: data[0] });
-    }
-
-    concatIdentifiers() {
-        let ident = '';
-
-        this.state.currentOffer.identifiers.forEach(elem => {
-            ident += elem;
-            ident += " ";
-        })
-
-        return ident.trim();
-    }
-
-    render() {
-        return (
-            <>
-            {this.state.currentOffer &&
+    return (
+        <div>
+            {currentOffer &&
             <div className='more-info-container'>
-                <img src={moreInfoLogo} className='more-info-logo'></img>
+                <img src={moreInfoLogo} className='more-info-logo' alt='more-info-logo'/>
                 <div className='info-div'>
                     <div className='section-div'>
                         <label className='more-info-label'>Title</label>
-                        <p className='more-info-section'>{this.state.currentOffer.title}</p>
+                        <p className='more-info-section'>{currentOffer.title}</p>
                     </div>
                     <div className='section-div'>
                         <label className='more-info-label'>Subtitle</label>
-                        <p className='more-info-section'>{this.state.currentOffer.subtitle}</p>
+                        <p className='more-info-section'>{currentOffer.subtitle}</p>
                     </div>
                     <div className='section-div'>
                         <label className='more-info-label'>Location</label>
-                        <p className='more-info-section'>{this.state.currentOffer.location}</p>
+                        <p className='more-info-section'>{currentOffer.location}</p>
                     </div>
                     <div className='section-div'>
                         <label className='more-info-label'>Interval</label>
-                        <p className='more-info-section'>{this.state.currentOffer.interval}</p>
+                        <p className='more-info-section'>{currentOffer.interval}</p>
                     </div>
                     <div className='section-div'>
                         <label className='more-info-label'>Description</label>
-                        <p className='more-info-section'>{this.state.currentOffer.description}</p>
+                        <p className='more-info-section'>{currentOffer.description}</p>
                     </div>
-                    {this.state.currentOffer.identifiers &&
+                    {currentOffer.identifiers &&
                     <div className='section-div'>
                         <label className='more-info-label'>Identifiers</label>
-                        <p className='more-info-section'>{this.concatIdentifiers()}</p>
+                        <p className='more-info-section'>{concatIdentifiers()}</p>
                     </div>}
                 </div>
             </div>}
-            </>
-        )
-    }
+        </div>
+    );
 }
-
-export default MoreInfoOffer;

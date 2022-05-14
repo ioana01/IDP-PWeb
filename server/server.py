@@ -296,17 +296,14 @@ def put_offer(id):
         print(ex)
         return Response(status=409)
 
-@app.route('/api/offers/<int:idOffer>', methods=['GET'])
-def get_offer_details(idOffer):
+@app.route('/api/offer-details', methods=['GET'])
+def get_offer_details():
+    args = request.args
+    args = args.to_dict()
     try:
-        data = list(db.offers.find())
-
-        for elem in data:
-            elem.pop('_id', None)
-
-        result = list(filter(lambda elem : elem['id'] == idOffer, data))
-
-        return jsonify(result), 200
+        response = db.offers.find_one({'id': args['id']})
+        response = json_util.dumps(response)
+        return response, 200
     except Exception as ex:
         print(ex)
         return Response(status=500)

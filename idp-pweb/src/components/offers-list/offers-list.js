@@ -76,7 +76,6 @@ export default function OffersList(){
     }
 
     const bookmarkPost = (offer) => {
-
         const successBookmark = () => {
             const oldOffers = offersContent.offers;
             const newOffers = oldOffers.map(oldOffer => {

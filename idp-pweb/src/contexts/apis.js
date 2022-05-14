@@ -12,7 +12,7 @@ const getFavoritesURL = apiURL + '/api/favorites';
 const putOfferURL = apiURL + '/api/offers';
 const putRequestURL = apiURL + '/api/requests';
 const deleteFavoriteURL = apiURL + '/api/favorites';
-const getOfferByIdURL = apiURL + '/api/offers';
+const getOfferByIdURL = apiURL + '/api/offer-details';
 const getRequestByIdURL = apiURL + '/api/requests';
 const postProfileURL = apiURL + '/api/profile';
 const getProfileURL = apiURL + '/api/profile';
@@ -133,13 +133,15 @@ export const putOffer = (data, id) => {
         error => console.log(error)
     )
 }
-export const getOfferById = (offerData, token, success, failure) => {
+export const getOfferById = (offerData, success, failure) => {
     axios({
         method: 'get',
-        url: `${getOfferByIdURL}/${offerData.id}`,
+        url: getOfferByIdURL,
+        params: {
+            id: offerData.id
+        },
         headers: {
-          'content-type': 'application/json; charset=utf-8',
-          'Authorization': `${token}`
+          'content-type': 'application/json; charset=utf-8'
         }
     })
     .then((response) => {
