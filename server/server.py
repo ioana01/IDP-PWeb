@@ -191,14 +191,31 @@ def post_favorite():
         favorite = {
             'id': str(uuid.uuid4()),
             'postId': payload['postId'],
-            'profileId': payload['profileId'],
-            'postType': payload['postType'] # request or offer
+            'profileId': payload['profileId']
         }
         db.favorites.insert_one(favorite)    
         return Response(status=201)
     except Exception as ex:
         print(ex)
         return Response(status=409)
+
+@app.route('/api/favorites', methods=['DELETE'])
+def delete_favorite():
+    print("Deleting favorite...")
+    payload = request.get_json()
+    try:
+        deleteItem = {
+            'postId': payload['postId'],
+            'profileId': payload['profileId']
+        }
+        db.favorites.delete_one({
+            "postId": deleteItem['postId'], 
+            "profileId": deleteItem['profileId']})
+
+        return Response(status=200)
+    except Exception as ex:
+        print(ex)
+        return Response(status=500)
 
 @app.route('/api/favorites', methods=['GET'])
 def get_favorites():
@@ -215,17 +232,6 @@ def get_favorites():
         response.headers.add('Access-Control-Allow-Origin', '*')
 
         return response, 200
-    except Exception as ex:
-        print(ex)
-        return Response(status=500)
-
-@app.route('/api/favorites/<int:id>', methods=['DELETE'])
-def delete_favorite(id):
-    print("Deleting favorite...")
-    try:
-        db.favorites.delete_one({"id": id})
-
-        return Response(status=200)
     except Exception as ex:
         print(ex)
         return Response(status=500)

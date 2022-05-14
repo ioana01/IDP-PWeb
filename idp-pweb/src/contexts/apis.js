@@ -19,135 +19,38 @@ const getProfileURL = apiURL + '/api/profile';
 const updateProfileURL = apiURL + '/api/update-profile';
 const resetPasswordUrl = apiURL + '/api/reset-password';
 
-export const getOffers = (success, scope) => {
-    fetch(getOfferURL, {
-        headers : { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-    }).then(
-        res => res.json()
-    ).then (
-        data => {
-            console.log(data);
-            success(data, scope);
-        }
-    )
-    .catch (
-        error => console.log(error)
-    )
-}
 
-export const getRequests = (success, scope) => {
-    fetch(getRequestURL, {
-        headers : { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+export const getRequests = (token, success, failure) => {
+    axios({
+        method: 'get',
+        url: getRequestURL,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         }
-    }).then(
-        res => res.json()
-    ).then (
-        data => {
-            console.log(data);
-            success(data, scope);
-        }
-    )
-    .catch (
-        error => console.log(error)
-    )
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
 }
-
-export const postOffer = (offerData) => {
-    fetch(postOfferURL, {
+export const postRequest = (requestData, token, success, failure) => {
+    axios({
         method: 'post',
-        body: JSON.stringify(offerData),
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        } 
-    }).then(
-        res => res.json()
-    ).then(
-        data => console.log(data)
-    )
-    .catch(
-        error => console.log(error)
-    )
-}
-
-export const postRequest = (requestData) => {
-    fetch(postRequestURL, {
-        method: 'post',
-        body: JSON.stringify(requestData),
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        } 
-    }).then(
-        res => res.json()
-    ).then(
-        data => console.log(data)
-    )
-    .catch(
-        error => console.log(error)
-    )
-}
-
-export const postFavorite = (offerData) => {
-    fetch(postFavoriteURL, {
-        method: 'post',
-        body: JSON.stringify(offerData),
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+        url: postRequestURL,
+        data: requestData,
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': `${token}`
         }
-    }).then(
-        res => res.json()
-    ).then(
-        data => console.log(data)
-    )
-    .catch(
-        error => console.log(error)
-    )
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
 }
-
-export const getFavorites = (success, scope) => {
-    fetch(getFavoritesURL, {
-        headers : { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-    }).then(
-        res => res.json()
-    ).then (
-        data => {
-            console.log(data);
-            success(data, scope);
-        }
-    )
-    .catch (
-        error => console.log(error)
-    )
-}
-
-export const putOffer = (data, id) => {
-    fetch(`${putOfferURL}/${id}`, {
-        method: 'put',
-        body: JSON.stringify(data),
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }).then(
-        res => res.json()
-    ).then(
-        data => console.log(data)
-    )
-    .catch(
-        error => console.log(error)
-    )
-}
-
 export const putRequest = (data, id) => {
     fetch(`${putRequestURL}/${id}`, {
         method: 'put',
@@ -165,10 +68,58 @@ export const putRequest = (data, id) => {
         error => console.log(error)
     )
 }
+export const getRequestById = (requestData, token, success, failure) => {
+    axios({
+        method: 'get',
+        url: `${getRequestByIdURL}/${requestData.id}`,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
+}
 
-export const deleteFavorite = (id) => {
-    fetch(`${deleteFavoriteURL}/${id}`, {
-        method: 'delete',
+
+export const getOffers = (token, success, failure) => {
+    axios({
+        method: 'get',
+        url: getOfferURL,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
+}
+export const postOffer = (offerData, token, success, failure) => {
+    axios({
+        method: 'post',
+        url: postOfferURL,
+        data: offerData,
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
+}
+export const putOffer = (data, id) => {
+    fetch(`${putOfferURL}/${id}`, {
+        method: 'put',
+        body: JSON.stringify(data),
         headers : { 
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -182,45 +133,90 @@ export const deleteFavorite = (id) => {
         error => console.log(error)
     )
 }
-
-export const getOfferById = (id, success, self) => {
-    fetch(`${getOfferByIdURL}/${id}`, {
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+export const getOfferById = (offerData, token, success, failure) => {
+    axios({
+        method: 'get',
+        url: `${getOfferByIdURL}/${offerData.id}`,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         }
-    }).then(
-        res => res.json()
-    ).then( 
-        data => {
-            console.log(data)
-            success(data, self);
-        }
-    )
-    .catch(
-        error => console.log(error)
-    )
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
 }
 
-export const getRequestById = (id, success, self) => {
-    fetch(`${getRequestByIdURL}/${id}`, {
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+
+export const postFavorite = (favoriteData, token, success, failure) => {
+    axios({
+        method: 'post',
+        url: postFavoriteURL,
+        data: favoriteData,
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': `${token}`
         }
-    }).then(
-        res => res.json()
-    ).then( 
-        data => {
-            console.log(data)
-            success(data, self);
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
+}
+export const getFavorites = (token, success, failure) => {
+    axios({
+        method: 'get',
+        url: getFavoritesURL,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         }
-    )
-    .catch(
-        error => console.log(error)
-    )
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
+}
+export const deleteFavorite = (deleteData, token, success, failure) => {
+    axios({
+        method: 'delete',
+        url: deleteFavoriteURL,
+        data: deleteData,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
 }
 
+
+export const getProfile = (profileData, token, success, failure) => {
+    axios({
+        method: 'get',
+        url: getProfileURL,
+        params: {
+            email: profileData.email
+        },
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
+        }
+    })
+    .then((response) => {
+        success(response.data);
+    }, (error) => {
+        failure(error);
+    });
+}
 export const postUpdateProfile = (updateData, token, success, failure) => {
     axios({
         method: 'post',
@@ -268,22 +264,4 @@ export const postProfile = (profileData, token, success, failure) => {
   }, (error) => {
       failure(error);
   });
-}
-export const getProfile = (profileData, token, success, failure) => {
-    axios({
-        method: 'get',
-        url: getProfileURL,
-        params: {
-            email: profileData.email
-        },
-        headers: {
-          'content-type': 'application/json; charset=utf-8',
-          'Authorization': `${token}`
-        }
-    })
-    .then((response) => {
-        success(response.data);
-    }, (error) => {
-        failure(error);
-    });
 }

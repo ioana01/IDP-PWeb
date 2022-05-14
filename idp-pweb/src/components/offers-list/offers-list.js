@@ -1,148 +1,155 @@
-import React, { Component } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import './offers-list.css';
 import SideMenu from "../side-menu/side-menu";
 import SearchBar from "../search-bar/search-bar";
 import Card from "../card/card";
-import { getOffers, getFavorites } from '../../contexts/apis';
-import { auth, database } from "../../firebase";
+import { 
+    getOffers, 
+    getFavorites,
+    postFavorite,
+    deleteFavorite,
+    getProfile } from '../../contexts/apis';
+import './offers-list.css';
 
-class OffersList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            favoritesList: [],
-            currentUser: {},
-            offersList: [],
-            currentTab: 0,
-            initialOffersList: [],
-            initialFavoritesList: []
-        }
-    }
 
-    async componentDidMount() {
-        getOffers(this.setOffers, this);
-        getFavorites(this.setFavorites, this);
+export default function OffersList(){
+    const email = localStorage.getItem('email');
+    const token = localStorage.getItem('token');
 
-        const usersRef = database.ref("users");
+    const [offersContent, setOffersContent] = useState({
+        offers: [],
+        favorites: [],
+    });
+    const [profile, setProfile] = useState(null);
+    const [searchText, setSearchText] = useState('');
+    const [currentTab, setCurrentTab] = useState('');
+    const [filteredOffers, setFilteredOffers] = useState([]);
 
-        await usersRef.on('value', snapshot => {
-            snapshot.forEach(childSnapshot => {
-                const childData = childSnapshot.val();
-                
-                if(childData.email === auth.currentUser.email) {
-                    this.setState({ currentUser: childData });
-                }
+    useEffect(() => {
+        getProfile({email: email}, token, successGetProfile, failureGetProfile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (profile === null) return;
+
+        let offers = [];
+        let favorites = [];  
+
+        const successGetOffers = (offersData) => {
+            offers = offersData;
+            getFavorites(token, successGetFavorites, failureGetFavorites);
+        };
+        const failureGetOffers = (error) => {
+            console.log(error);
+            setOffersContent({ offers: [], favorites: [] });
+        };
+        const successGetFavorites = (favoritesData) => {
+            favorites = favoritesData;
+            offers = offers.map(offer => {
+                const favorite = favoritesData.find(favorite => favorite.postId === offer.id);
+                return { ...offer, favorite: !favorite ? false : true };
             });
+            setOffersContent({ offers: offers, favorites: favorites });
+        };
+        const failureGetFavorites = (error) => {
+            console.log(error);
+            setOffersContent({ offers: [], favorites: [] });
+        };
 
-        });
+        getOffers(token, successGetOffers, failureGetOffers);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [profile]);
+    
+    const successGetProfile = (data) => {
+        setProfile(data);
+    }
+    const failureGetProfile = (error) => {
+        console.log(error);
+        setProfile(null);
     }
 
-    setOffers(list, scope) {
-        console.log(list);
-        scope.setState({ offersList: list });
-        scope.setState({ initialOffersList: list });
+    const changeCurrentTab = (identifier) => {
+        setCurrentTab(identifier);
     }
 
-    setFavorites(list, scope) {
-        const filteredList = list.filter(offer => offer.savedOnAccount === auth.currentUser.email);
-        scope.setState({ favoritesList: filteredList });
-        scope.setState({ initialFavoritesList: filteredList });
+    const bookmarkPost = (offer) => {
+
+        const successBookmark = () => {
+            const oldOffers = offersContent.offers;
+            const newOffers = oldOffers.map(oldOffer => {
+                if (oldOffer.id === offer.id) {
+                    return { ...oldOffer, favorite: !oldOffer.favorite };
+                }
+                return oldOffer;
+            });
+            const oldFavorite = offersContent.favorites;
+            const newFavorite = oldFavorite.map(oldFavorite => {
+                if (oldFavorite.postId === offer.id) {
+                    return { ...oldFavorite, favorite: !oldFavorite.favorite };
+                }
+                return oldFavorite;
+            });
+            setOffersContent({ offers: newOffers, favorites: newFavorite });
+        }
+        const failureBookmark = (error) => {
+            console.log(error);
+        }
+
+        (offer.favorite === true)
+            ? deleteFavorite({postId: offer.id, profileId: profile.id}, token, successBookmark, failureBookmark)
+            : postFavorite({postId: offer.id, profileId: profile.id}, token, successBookmark, failureBookmark);
     }
 
-    setCurrentTab(id) {
-        this.setState({ currentTab: id });
+    const filterOffersSearch = (searchText, identifier) => {
+        if (offersContent.offers == null || offersContent.offers.length < 1)
+            return [];
+
+        identifier = identifier.trim();
+        searchText = searchText.trim();
+
+        const filteredByIdentifier = (identifier !== null && identifier !== '') ? 
+            offersContent.offers.filter(offer => 
+                offer.identifiers.includes(identifier)) : offersContent.offers;
+
+        const finalFiltered = (searchText !== null && searchText !== '') ? 
+            filteredByIdentifier.filter(offer => 
+                offer.title.toUpperCase().includes(searchText.toUpperCase())) : filteredByIdentifier;
+        
+        setFilteredOffers(finalFiltered);
     }
 
-    searchByName() {
-        const input = document.getElementById("search-input");
-        let search = input.value.toUpperCase();
+    useEffect(() => {
+        if (offersContent.offers === null || offersContent.offers.length < 1) return;
+        filterOffersSearch(searchText, currentTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [offersContent.offers, currentTab, searchText]);
 
-        let offers = [...this.state.initialOffersList];
-        let searchedOffers = offers.filter(offer => {
-            if(offer.title.toUpperCase().indexOf(search) > -1) {
-                return true;
-            } 
+    return (
+        <div className="grid grid-cols-6 gap-0">
+            <SideMenu setCurrentTab={changeCurrentTab}/>
+            <div className="card-list sm:col-span-4 col-span-6">
+                <SearchBar
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}/>
 
-            return false;
-        });
-
-        this.setState({ offersList: searchedOffers });
-
-        let favs = [...this.state.initialFavoritesList];
-        let searchedFavs = favs.filter(offer => {
-            if(offer.title.toUpperCase().indexOf(search) > -1) {
-                return true;
-            } 
-
-            return false;
-        });
-
-        this.setState({ favoritesList: searchedFavs });
-    }
-
-    render() {
-        return (
-            <div class="grid grid-cols-6 gap-0">
-                <SideMenu setCurrentTab={this.setCurrentTab.bind(this)}/>
-                <div className="card-list sm:col-span-4 col-span-6">
-                    <SearchBar searchByName={this.searchByName} self={this}/>
-
-                    {this.state.currentUser && this.state.currentUser.userType === 'I offer help' &&
-                    <div className="add-wrapper">
-                        <Link to="/offer" className="add-sign">Add offer</Link>
-                    </div>}
-
-                    {{
-                        0:
-                            <div className="cards-container grid grid-cols-2 gap-8">
-                                {this.state.offersList.map(offer => {
-                                    return <Card addNewSavedItem={this.addNewSavedItem} offer={offer}/>
-                                })}
-                            </div>,
-                        1:
-                            <div className="cards-container grid grid-cols-2 gap-8">
-                                {this.state.offersList.map(offer => {
-                                    if(offer.identifiers.find(id => id === '#transport')) {
-                                        return <Card addNewSavedItem={this.addNewSavedItem} offer={offer}/>
-                                    }
-                                })}
-                            </div>,
-                        2:
-                            <div className="cards-container grid grid-cols-2 gap-8">
-                                {this.state.offersList.map(offer => {
-                                    if(offer.identifiers.find(id => id === '#accommodation')) {
-                                        return <Card addNewSavedItem={this.addNewSavedItem} offer={offer}/>
-                                    }
-                                })}
-                            </div>,
-                        3:
-                            <div className="cards-container grid grid-cols-2 gap-8">
-                                {this.state.offersList.map(offer => {
-                                    if(offer.identifiers.find(id => id === '#food')) {
-                                        return <Card addNewSavedItem={this.addNewSavedItem} offer={offer}/>
-                                    }
-                                })}
-                            </div>,
-                        4:
-                            <div className="cards-container grid grid-cols-2 gap-8">
-                                {this.state.offersList.map(offer => {
-                                    if(offer.identifiers.find(id => id !== '#transport' && id !== '#food' && id !== '#accommodation')) {
-                                        return <Card addNewSavedItem={this.addNewSavedItem} offer={offer}/>
-                                    }
-                                })}
-                            </div>,
-                        5:
-                            <div className="cards-container lg:columns-2 gap-8">
-                                {this.state.favoritesList.map(offer => {
-                                    return <Card addNewSavedItem={this.addNewSavedItem} offer={offer}/>
-                                })}
-                            </div>
-                    }[this.state.currentTab]} 
+                {profile && profile.userType === 'provider' &&
+                <div className="add-wrapper">
+                    <Link to="/offer" className="add-sign">Add offer</Link>
+                </div>}
+                <div className="cards-container grid grid-cols-2 gap-8">
+                    {
+                        filteredOffers.length > 0 && filteredOffers.map(offer => {
+                            return <Card bookmarkPost={bookmarkPost} offer={offer} key={offer.id}/>
+                    })}
+                    {
+                        !filteredOffers.length &&
+                            <span>No offers to be displayed...</span>
+                    }
                 </div>
             </div>
-        )
-    }
-}
-
-export default OffersList;
+        </div>
+    );
+};
