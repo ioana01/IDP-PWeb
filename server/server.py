@@ -8,6 +8,7 @@ import time
 from flask_cors import CORS
 from pyrebase import pyrebase
 from bson import json_util
+import uuid
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
@@ -38,12 +39,6 @@ try:
 except Exception as e:
     print(e)
     print('Error - Cannot connect to dbbb')
-
-# current offer id
-id_offer = 0
-id_request = 0
-id_profile = 0
-id_favorite = 0
 
 ########################### RABBIT MQ #####################################
 
@@ -129,12 +124,9 @@ def get_profile():
 def post_profile():
     profile_payload = request.get_json()
     jwtToken = request.headers['Authorization']
-
-    global id_profile
-
     try:
         profile = {
-            'id': id_profile,
+            'id': str(uuid.uuid4()),
             'name': profile_payload['name'],
             'email': profile_payload['email'],
             'phone': profile_payload['phone'],
@@ -142,12 +134,8 @@ def post_profile():
             'group': profile_payload['group'],
             'createdAt': datetime.datetime.now(),
         }
-
         db.profiles.insert_one(profile)
-        id_profile += 1
-
         publish_verify_email(profile_payload['email'], jwtToken)
-
         return jsonify({'message': 'Profile created successfully'}), 201
     except Exception as ex:
         print(ex)
@@ -157,15 +145,11 @@ def post_profile():
 
 @app.route('/api/requests', methods=['POST'])
 def post_requests():
-    global id_request
-    # get payload from request
     payload = request.get_json()
     print('Posting request...')
-
     try:
-        id_request += 1
         request = {
-            'id': id_request,
+            'id': str(uuid.uuid4()),
             'title': payload['title'],
             'subtitle': payload['subtitle'],
             'location': payload['location'],
@@ -173,9 +157,7 @@ def post_requests():
             'identifiers': payload['identifiers'],
             'author': payload['author']
         }
-
-        db.requests.insert_one(request)
-        
+        db.requests.insert_one(request)     
         return Response(status=201)
     except Exception as ex:
         print(ex)
@@ -203,19 +185,16 @@ def get_requests():
 
 @app.route('/api/favorites', methods=['POST'])
 def post_favorite():
-    global id_favorite
     payload = request.get_json()
     print("Marking favorite...")
-
     try:
         favorite = {
-            'id': id_favorite,
+            'id': str(uuid.uuid4()),
             'postId': payload['postId'],
             'profileId': payload['profileId'],
             'postType': payload['postType'] # request or offer
         }
-        db.favorites.insert_one(favorite)
-        
+        db.favorites.insert_one(favorite)    
         return Response(status=201)
     except Exception as ex:
         print(ex)
@@ -255,13 +234,11 @@ def delete_favorite(id):
 
 @app.route('/api/offers', methods=['POST'])
 def post_offers():
-    global id_offer
     payload = request.get_json()
     print('Posting offer...')
     try:
-        id_offer += 1
         offer = {
-            'id': id_offer,
+            'id': str(uuid.uuid4()),
             'title': payload['title'],
             'subtitle': payload['subtitle'],
             'location': payload['location'],
