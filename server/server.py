@@ -43,8 +43,9 @@ except Exception as e:
 id_offer = 0
 id_request = 0
 id_profile = 0
+id_favorite = 0
 
-########################################################################
+########################### RABBIT MQ #####################################
 
 def publish_verify_email(email, idToken):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
@@ -60,7 +61,6 @@ def publish_verify_email(email, idToken):
     connection.close()
     return '  [x] Publishing verification email for %s' % email
 
-
 def publish_reset_password(email):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
     channel = connection.channel()
@@ -74,9 +74,6 @@ def publish_reset_password(email):
         ))
     connection.close()
     return '  [x] Publishing reset password for %s' % email
-
-
-########################################################################
 
 @app.route('/add-job/<cmd>')
 def add(cmd):
@@ -93,6 +90,7 @@ def add(cmd):
     connection.close()
     return " [x] Sent: %s" % cmd
 
+############################## PROFILE #####################################
 
 @app.route('/api/update-profile', methods=['POST'])
 def update_profile():
@@ -107,19 +105,18 @@ def update_profile():
 
     return jsonify({'message: ': 'Profile updated'}), 200
 
-
 @app.route('/api/reset-password', methods=['POST'])
 def reset_password():
     email = request.get_json()['email']
     publish_reset_password(email)
     return jsonify({'message: ': 'Password reset email sent'}), 200
 
-
 @app.route('/api/profile', methods=['GET'])
 def get_profile():
     args = request.args
     args = args.to_dict()
     jwtToken = request.headers.get('Authorization')
+    print('Getting profile details...')
     try:
         response = db.profiles.find_one({"email": args['email']})
         response = json_util.dumps(response)
@@ -127,7 +124,6 @@ def get_profile():
     except Exception as e:
         print(e)
         return jsonify({'message': 'Error getting profile information'}), 400
-
 
 @app.route('/api/profile', methods=['POST'])
 def post_profile():
@@ -157,47 +153,18 @@ def post_profile():
         print(ex)
         return jsonify({'message': 'Error creating profile'}), 400
 
-
-
-
-@app.route('/api/offers', methods=['POST'])
-def post_offers():
-    global id_offer
-
-    # get payload from request
-    payload = request.get_json()
-    print(payload)
-
-    try:
-        id_offer += 1
-        offer = {
-            'id': id_offer,
-            'title': payload['title'],
-            'subtitle': payload['subtitle'],
-            'location': payload['location'],
-            'interval': payload['interval'],
-            'description': payload['description'],
-            'identifiers': payload['identifiers'],
-            'author': payload['author']
-        }
-
-        dbResponse = db.offers.insert_one(offer)
-        
-        return Response(status=201)
-    except Exception as ex:
-        print(ex)
-        return Response(status=409)
+############################## REQUESTS #####################################
 
 @app.route('/api/requests', methods=['POST'])
 def post_requests():
     global id_request
     # get payload from request
     payload = request.get_json()
-    print(payload)
+    print('Posting request...')
 
     try:
         id_request += 1
-        offer = {
+        request = {
             'id': id_request,
             'title': payload['title'],
             'subtitle': payload['subtitle'],
@@ -207,30 +174,12 @@ def post_requests():
             'author': payload['author']
         }
 
-        dbResponse = db.requests.insert_one(offer)
+        db.requests.insert_one(request)
         
         return Response(status=201)
     except Exception as ex:
         print(ex)
         return Response(status=409)
-
-@app.route('/api/offers', methods=['GET'])
-def get_offers():
-    try:
-        # get all the offers from the database
-        data = list(db.offers.find())
-
-        # remove the '_id' field inserted by mongoDB 
-        for elem in data:
-            elem.pop('_id', None)
-
-        response = jsonify(data)
-        response.headers.add('Access-Control-Allow-Origin', '*')
-
-        return response, 200
-    except Exception as ex:
-        print(ex)
-        return Response(status=500)
 
 @app.route('/api/requests', methods=['GET'])
 def get_requests():
@@ -250,27 +199,22 @@ def get_requests():
         print(ex)
         return Response(status=500)
 
+############################## FAVORITES ####################################
+
 @app.route('/api/favorites', methods=['POST'])
 def post_favorite():
-    # get payload from request
+    global id_favorite
     payload = request.get_json()
-    print(payload)
+    print("Marking favorite...")
 
     try:
-        offer = {
-            'id': payload['id'],
-            'title': payload['title'],
-            'subtitle': payload['subtitle'],
-            'location': payload['location'],
-            'interval': payload['interval'],
-            'description': payload['description'],
-            'identifiers': payload['identifiers'],
-            'author': payload['author'],
-            'savedOnAccount': payload['savedOnAccount'],
-            'favorite': 'true'
+        favorite = {
+            'id': id_favorite,
+            'postId': payload['postId'],
+            'profileId': payload['profileId'],
+            'postType': payload['postType'] # request or offer
         }
-
-        dbResponse = db.favorites.insert_one(offer)
+        db.favorites.insert_one(favorite)
         
         return Response(status=201)
     except Exception as ex:
@@ -279,6 +223,7 @@ def post_favorite():
 
 @app.route('/api/favorites', methods=['GET'])
 def get_favorites():
+    print('Getting favorites...')
     try:
         # get all the offers from the database
         data = list(db.favorites.find())
@@ -295,8 +240,63 @@ def get_favorites():
         print(ex)
         return Response(status=500)
 
+@app.route('/api/favorites/<int:id>', methods=['DELETE'])
+def delete_favorite(id):
+    print("Deleting favorite...")
+    try:
+        db.favorites.delete_one({"id": id})
+
+        return Response(status=200)
+    except Exception as ex:
+        print(ex)
+        return Response(status=500)
+
+############################## OFFERS #######################################
+
+@app.route('/api/offers', methods=['POST'])
+def post_offers():
+    global id_offer
+    payload = request.get_json()
+    print('Posting offer...')
+    try:
+        id_offer += 1
+        offer = {
+            'id': id_offer,
+            'title': payload['title'],
+            'subtitle': payload['subtitle'],
+            'location': payload['location'],
+            'interval': payload['interval'],
+            'description': payload['description'],
+            'identifiers': payload['identifiers'],
+            'author': payload['author']
+        }
+        db.offers.insert_one(offer) 
+        return Response(status=201)
+    except Exception as ex:
+        print(ex)
+        return Response(status=400)
+
+@app.route('/api/offers', methods=['GET'])
+def get_offers():
+    print('Getting offers...')
+    try:
+        # get all the offers from the database
+        data = list(db.offers.find())
+
+        # remove the '_id' field inserted by mongoDB 
+        for elem in data:
+            elem.pop('_id', None)
+
+        response = jsonify(data)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+
+        return response, 200
+    except Exception as ex:
+        print(ex)
+        return Response(status=500)
+
 @app.route('/api/offers/<int:id>', methods=['PUT'])
-def put_favorites(id):
+def put_offer(id):
     # get payload from request
     payload = request.get_json(silent=True)
 
@@ -313,18 +313,8 @@ def put_favorites(id):
         print(ex)
         return Response(status=409)
 
-@app.route('/api/favorites/<int:id>', methods=['DELETE'])
-def delete_country(id):
-    try:
-        dbResponse = db.favorites.delete_one({"id": id})
-
-        return Response(status=200)
-    except Exception as ex:
-        print(ex)
-        return Response(status=500)
-
 @app.route('/api/offers/<int:idOffer>', methods=['GET'])
-def get_cities_country(idOffer):
+def get_offer_details(idOffer):
     try:
         data = list(db.offers.find())
 
@@ -338,6 +328,8 @@ def get_cities_country(idOffer):
         print(ex)
         return Response(status=500)
 
+
+############################## MAIN #######################################
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=7020, debug=True)
