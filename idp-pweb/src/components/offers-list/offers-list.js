@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SideMenu from "../side-menu/side-menu";
 import SearchBar from "../search-bar/search-bar";
-import Card from "../card/card";
+import OfferCard from "../offer-card/offer-card";
 import { 
     getOffers, 
     getFavorites,
@@ -129,7 +129,7 @@ export default function OffersList(){
                 <div className="cards-container grid grid-cols-2 gap-8">
                     {
                         filteredOffers.length > 0 && filteredOffers.map(offer => {
-                            return <Card bookmarkPost={bookmarkPost} offer={offer} key={offer.id}/>
+                            return <OfferCard bookmarkPost={bookmarkPost} offer={offer} key={offer.id}/>
                     })}
                     {
                         !filteredOffers.length &&

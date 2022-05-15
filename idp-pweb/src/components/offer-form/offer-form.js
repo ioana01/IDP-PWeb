@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import './offer-form.css';
-import { auth, database } from "../../firebase";
+import React from "react";
+import { auth } from "../../firebase";
 import { postOffer } from '../../contexts/apis';
+import './offer-form.css';
 
 export default function OfferForm() {
 

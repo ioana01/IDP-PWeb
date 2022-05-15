@@ -1,35 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { postFavorite, putOffer, deleteFavorite } from '../../contexts/apis';
-import { auth } from "../../firebase";
-import './card.css';
+import './offer-card.css';
 
-export default function Card({ bookmarkPost, offer }) {
-    // constructor(props) {
-    //     super(props);
-    //     const isFav = props.offer.favorite === 'true' ? 'fa-bookmark' : 'fa-bookmark-o';
-
-    //     this.state = {
-    //         status: isFav,
-    //         cardId: ''
-    //     }
-    // }
-
-    const saveCard = () => {
-        // const newStatus = this.state.status === 'fa-bookmark-o' ? 'fa-bookmark' : 'fa-bookmark-o';
-        // this.setState({ status: newStatus });
-    
-        // if(newStatus === 'fa-bookmark') {
-        //     const savedOffer = {...this.props.offer, savedOnAccount: auth.currentUser.email};
-        //     postFavorite(savedOffer);
-        //     putOffer({favorite: "true"}, this.props.offer.id);
-        // } else {
-        //     putOffer({favorite: "false"}, this.props.offer.id);
-        //     deleteFavorite(this.props.offer.id);
-        // }
-    }
-
+export default function OfferCard({ bookmarkPost, offer }) {
     return (
         <div className="card-container">
             { offer && 

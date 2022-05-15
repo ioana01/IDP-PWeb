@@ -148,7 +148,7 @@ def post_requests():
     payload = request.get_json()
     print('Posting request...')
     try:
-        request = {
+        requestData = {
             'id': str(uuid.uuid4()),
             'title': payload['title'],
             'subtitle': payload['subtitle'],
@@ -157,7 +157,7 @@ def post_requests():
             'identifiers': payload['identifiers'],
             'author': payload['author']
         }
-        db.requests.insert_one(request)     
+        db.requests.insert_one(requestData)     
         return Response(status=201)
     except Exception as ex:
         print(ex)
@@ -165,6 +165,7 @@ def post_requests():
 
 @app.route('/api/requests', methods=['GET'])
 def get_requests():
+    print('Getting requests...')
     try:
         # get all the offers from the database
         data = list(db.requests.find())
@@ -176,6 +177,18 @@ def get_requests():
         response = jsonify(data)
         response.headers.add('Access-Control-Allow-Origin', '*')
 
+        return response, 200
+    except Exception as ex:
+        print(ex)
+        return Response(status=500)
+
+@app.route('/api/request-details', methods=['GET'])
+def get_request_details():
+    args = request.args
+    args = args.to_dict()
+    try:
+        response = db.requests.find_one({'id': args['id']})
+        response = json_util.dumps(response)
         return response, 200
     except Exception as ex:
         print(ex)
