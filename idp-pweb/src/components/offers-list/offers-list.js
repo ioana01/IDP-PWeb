@@ -17,10 +17,7 @@ export default function OffersList(){
     const email = localStorage.getItem('email');
     const token = localStorage.getItem('token');
 
-    const [offersContent, setOffersContent] = useState({
-        offers: [],
-        favorites: [],
-    });
+    const [offersList, setOffersList] = useState([]);
     const [profile, setProfile] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [currentTab, setCurrentTab] = useState('');
@@ -35,7 +32,6 @@ export default function OffersList(){
         if (profile === null) return;
 
         let offers = [];
-        let favorites = [];  
 
         const successGetOffers = (offersData) => {
             offers = offersData;
@@ -43,19 +39,18 @@ export default function OffersList(){
         };
         const failureGetOffers = (error) => {
             console.log(error);
-            setOffersContent({ offers: [], favorites: [] });
+            setOffersList([]);
         };
         const successGetFavorites = (favoritesData) => {
-            favorites = favoritesData;
             offers = offers.map(offer => {
                 const favorite = favoritesData.find(favorite => favorite.postId === offer.id);
                 return { ...offer, favorite: !favorite ? false : true };
             });
-            setOffersContent({ offers: offers, favorites: favorites });
+            setOffersList(offers);
         };
         const failureGetFavorites = (error) => {
             console.log(error);
-            setOffersContent({ offers: [], favorites: [] });
+            setOffersList([]);
         };
 
         getOffers(token, successGetOffers, failureGetOffers);
@@ -77,21 +72,14 @@ export default function OffersList(){
 
     const bookmarkPost = (offer) => {
         const successBookmark = () => {
-            const oldOffers = offersContent.offers;
+            const oldOffers = offersList;
             const newOffers = oldOffers.map(oldOffer => {
                 if (oldOffer.id === offer.id) {
                     return { ...oldOffer, favorite: !oldOffer.favorite };
                 }
                 return oldOffer;
             });
-            const oldFavorite = offersContent.favorites;
-            const newFavorite = oldFavorite.map(oldFavorite => {
-                if (oldFavorite.postId === offer.id) {
-                    return { ...oldFavorite, favorite: !oldFavorite.favorite };
-                }
-                return oldFavorite;
-            });
-            setOffersContent({ offers: newOffers, favorites: newFavorite });
+            setOffersList(newOffers);
         }
         const failureBookmark = (error) => {
             console.log(error);
@@ -103,28 +91,28 @@ export default function OffersList(){
     }
 
     const filterOffersSearch = (searchText, identifier) => {
-        if (offersContent.offers == null || offersContent.offers.length < 1)
+        if (offersList == null || offersList < 1)
             return [];
 
         identifier = identifier.trim();
         searchText = searchText.trim();
 
-        const filteredByIdentifier = (identifier !== null && identifier !== '') ? 
-            offersContent.offers.filter(offer => 
-                offer.identifiers.includes(identifier)) : offersContent.offers;
+        const filteredByIdentifier = (identifier !== null && identifier !== '') 
+            ? offersList.filter(offer => offer.identifiers.includes(identifier)) 
+            : offersList;
 
-        const finalFiltered = (searchText !== null && searchText !== '') ? 
-            filteredByIdentifier.filter(offer => 
-                offer.title.toUpperCase().includes(searchText.toUpperCase())) : filteredByIdentifier;
+        const finalFiltered = (searchText !== null && searchText !== '') 
+            ? filteredByIdentifier.filter(offer => offer.title.toUpperCase().includes(searchText.toUpperCase())) 
+            : filteredByIdentifier;
         
         setFilteredOffers(finalFiltered);
     }
 
     useEffect(() => {
-        if (offersContent.offers === null || offersContent.offers.length < 1) return;
+        if (offersList === null || offersList.length < 1) return;
         filterOffersSearch(searchText, currentTab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [offersContent.offers, currentTab, searchText]);
+    }, [offersList, currentTab, searchText]);
 
     return (
         <div className="grid grid-cols-6 gap-0">
