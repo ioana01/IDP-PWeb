@@ -2,7 +2,7 @@ _format_version: "2.1"
 
 services:
   - name: be
-    url: http://be:7020/api
+    url: http://backend-flask:7020/api
     routes:
       - name: be-route
         paths: 
