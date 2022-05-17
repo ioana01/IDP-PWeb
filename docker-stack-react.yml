@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  frotend-react:
+    image: andreip97/frontend-react:latest
+    depends_on:
+      - "backend-flask"
+    deploy:
+        replicas: 2
+        placement:
+            max_replicas_per_node: 1
+        update_config:
+            order: start-first
+        rollback_config:
+            order: stop-first
+    ports:
+      - 3001:3000
+    networks:
+      - internal
+
+  backend-flask:
+    image: andreip97/backend-flask:latest
+    depends_on:
+      - "mongo-database"
+    deploy:
+        replicas: 2
+        placement:
+            max_replicas_per_node: 1
+        update_config:
+            order: start-first
+        rollback_config:
+            order: stop-first
+    ports:
+      - 7020:7020
+    networks:
+      - internal
+
+  worker-python:
+    image: andreip97/worker-python:latest
+    depends_on:
+      - "rabbitmq"
+    deploy:
+        replicas: 2
+        placement:
+            max_replicas_per_node: 1
+        update_config:
+            order: start-first
+        rollback_config:
+            order: stop-first
+    ports:
+      - 9999:9999
+    networks:
+      - internal
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  mongo-database:
+    depends_on:
+      - "rabbitmq"
+    image: mongo:latest
+    hostname: mongo-database
+    deploy:
+        placement:
+            constraints: [node.role == manager]
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - internal
+
+  rabbitmq:
+    image: 'rabbitmq:management-alpine'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - internal
+    hostname: rabbitmq
+      
+  kong:
+    image: kong:latest
+    volumes:
+      - ./kong:/usr/local/kong/declarative
+    environment:
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+    ports:
+      - 8000:8000
+      - 8443:8443
+      - 8001:8001
+      - 8444:8444
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - internal
+      
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+        - ./grafana/data:/var/lib/grafana
+    ports:
+        - 3000:3000
+    networks:
+        - internal
+      
+  prometheus:
+    image: prom/prometheus
+    volumes:
+        - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
+    ports:
+        - 9090:9090
+    networks:
+        - internal
+
+networks:
+  internal:
+    name: internal
