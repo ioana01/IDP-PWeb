@@ -10,6 +10,7 @@ import {
     postFavorite,
     deleteFavorite,
     getProfile } from '../../contexts/apis';
+import { auth } from "../../firebase";
 import './requests-list.css';
 
 
@@ -97,9 +98,20 @@ export default function RequestsList(){
         identifier = identifier.trim();
         searchText = searchText.trim();
 
-        const filteredByIdentifier = (identifier !== null && identifier !== '') 
-            ? requestsList.filter(offer => offer.identifiers.includes(identifier)) 
-            : requestsList;
+        let filteredByIdentifier;
+        if(identifier !== 'myRequests' && identifier !== 'favorites') {
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? requestsList.filter(offer => offer.identifiers.includes(identifier)) 
+                : requestsList;
+        } else if(identifier === 'myRequests'){
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? requestsList.filter(offer => offer.author === auth.currentUser.email) 
+                : requestsList;
+        } else if(identifier === 'favorites') {
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? requestsList.filter(offer => offer.favorite) 
+                : requestsList;
+        }
 
         const finalFiltered = (searchText !== null && searchText !== '') 
             ? filteredByIdentifier.filter(offer => offer.title.toUpperCase().includes(searchText.toUpperCase())) 
@@ -114,17 +126,18 @@ export default function RequestsList(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requestsList, currentTab, searchText]);
 
+    console.log(profile?.userType);
     return (
         <div className="grid grid-cols-6 gap-0">
-            <SideMenu setCurrentTab={changeCurrentTab}/>
+            <SideMenu setCurrentTab={changeCurrentTab} profile={profile} currentTab='requests'/>
             <div className="card-list sm:col-span-4 col-span-6">
                 <SearchBar
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}/>
 
-                {profile && profile.userType === 'provider' &&
+                {profile && profile.userType === 'requester' &&
                 <div className="add-wrapper">
-                    <Link to="/offer" className="add-sign">Add offer</Link>
+                    <Link to="/request" className="add-sign">Add request</Link>
                 </div>}
                 <div className="cards-container grid grid-cols-2 gap-8">
                     {

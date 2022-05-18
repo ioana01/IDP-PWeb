@@ -33,10 +33,13 @@ export default function OfferForm() {
         }
     }
 
-    const succesPostOffer = () => {
+    const succesPostOffer = (response) => {
+        window.location.reload(false);
+        alert('Offer posted successfuly');
     }
-    const failurePostOffer = () => {
 
+    const failurePostOffer = () => {
+        alert('Oops, something went wrong...');
     }
 
     return (
