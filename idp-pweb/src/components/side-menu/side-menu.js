@@ -2,7 +2,6 @@ import React from "react";
 import './side-menu.css';
 
 export default function SideMenu(props) {
-    console.log(props.profile);
     return (
         <div className="side-menu col-span-6 sm:col-span-2">
             <p className="menu-section" onClick={() => props.setCurrentTab('')}>All</p>

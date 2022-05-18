@@ -50,7 +50,7 @@ export default function RequestForm() {
             description: "",
             identifiers: [],
         })
-        setTimeout(() => alert('Request posted successfuly'), 2);
+        alert('Request posted successfuly');
     }
     const failurePostRequest = () => {
     }

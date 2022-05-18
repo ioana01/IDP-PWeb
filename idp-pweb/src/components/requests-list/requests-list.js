@@ -126,7 +126,6 @@ export default function RequestsList(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requestsList, currentTab, searchText]);
 
-    console.log(profile?.userType);
     return (
         <div className="grid grid-cols-6 gap-0">
             <SideMenu setCurrentTab={changeCurrentTab} profile={profile} currentTab='requests'/>
