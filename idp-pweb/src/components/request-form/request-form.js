@@ -50,6 +50,7 @@ export default function RequestForm() {
             description: "",
             identifiers: [],
         })
+        alert('Request posted successfuly');
     }
     const failurePostRequest = () => {
     }

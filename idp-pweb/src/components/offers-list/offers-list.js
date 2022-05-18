@@ -10,6 +10,7 @@ import {
     postFavorite,
     deleteFavorite,
     getProfile } from '../../contexts/apis';
+import { auth } from "../../firebase";
 import './offers-list.css';
 
 
@@ -97,9 +98,20 @@ export default function OffersList(){
         identifier = identifier.trim();
         searchText = searchText.trim();
 
-        const filteredByIdentifier = (identifier !== null && identifier !== '') 
+        let filteredByIdentifier;
+        if(identifier !== 'myOffers' && identifier !== 'favorites') {
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
             ? offersList.filter(offer => offer.identifiers.includes(identifier)) 
             : offersList;
+        } else if(identifier === 'myOffers'){
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? offersList.filter(offer => offer.author === auth.currentUser.email) 
+                : offersList;
+        } else if(identifier === 'favorites') {
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? offersList.filter(offer => offer.favorite) 
+                : offersList;
+        }
 
         const finalFiltered = (searchText !== null && searchText !== '') 
             ? filteredByIdentifier.filter(offer => offer.title.toUpperCase().includes(searchText.toUpperCase())) 
@@ -116,7 +128,7 @@ export default function OffersList(){
 
     return (
         <div className="grid grid-cols-6 gap-0">
-            <SideMenu setCurrentTab={changeCurrentTab}/>
+            <SideMenu setCurrentTab={changeCurrentTab} profile={profile} currentTab='offers'/>
             <div className="card-list sm:col-span-4 col-span-6">
                 <SearchBar
                     value={searchText}

@@ -25,10 +25,6 @@ export default function RequestCard({ bookmarkPost, request }) {
                             <i className="fa fa-map-marker"></i>
                             <p>{request.location}</p>
                         </div>
-                        <div className="card-section">
-                            <i className="fa fa-clock-o"></i>
-                            <p>{request.interval}</p>
-                        </div>
                     </div>
                     <div className="px-6 pt-4 pb-2 identifiers-list">
                         {request.identifiers.map(identifier => {
