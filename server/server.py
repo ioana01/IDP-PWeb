@@ -153,6 +153,9 @@ def post_requests():
             'title': payload['title'],
             'subtitle': payload['subtitle'],
             'location': payload['location'],
+            'phone': payload['phone'],
+            'author': payload['author'],
+            'group': payload['group'],
             'description': payload['description'],
             'identifiers': payload['identifiers'],
             'author': payload['author']
@@ -261,6 +264,7 @@ def post_offers():
             'title': payload['title'],
             'subtitle': payload['subtitle'],
             'location': payload['location'],
+            'phone': payload['phone'],
             'interval': payload['interval'],
             'description': payload['description'],
             'identifiers': payload['identifiers'],

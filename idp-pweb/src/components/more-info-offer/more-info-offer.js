@@ -27,32 +27,39 @@ export default function MoreInfoOffer(props){
             {currentOffer &&
             <div className='more-info-container'>
                 <img src={moreInfoLogo} className='more-info-logo' alt='more-info-logo'/>
-                <div className='info-div'>
-                    <div className='section-div'>
-                        <label className='more-info-label'>Title</label>
+                <h2 className="text-center mb-4 text-xl">
+                    <strong>Description</strong>
+                </h2>
+                
+                <div className='info-div mt-4'>
+                    <div className='section-div pt-4'>
+                        <label className='more-info-label'><strong>Offer title:</strong></label>
                         <p className='more-info-section'>{currentOffer.title}</p>
                     </div>
                     <div className='section-div'>
-                        <label className='more-info-label'>Subtitle</label>
+                        <label className='more-info-label'><strong>Provider email:</strong></label>
+                        <p className='more-info-section'>{currentOffer.author}</p>
+                    </div>
+                    <div className='section-div'>
+                        <label className='more-info-label'><strong>Provider phone:</strong></label>
+                        <p className='more-info-section'>{currentOffer.phone}</p>
+                    </div>
+                    <div className='section-div'>
+                        <label className='more-info-label'><strong>Offer subtitle:</strong></label>
                         <p className='more-info-section'>{currentOffer.subtitle}</p>
                     </div>
                     <div className='section-div'>
-                        <label className='more-info-label'>Location</label>
+                        <label className='more-info-label'><strong>Help location:</strong></label>
                         <p className='more-info-section'>{currentOffer.location}</p>
                     </div>
                     <div className='section-div'>
-                        <label className='more-info-label'>Interval</label>
+                        <label className='more-info-label'><strong>Availability:</strong></label>
                         <p className='more-info-section'>{currentOffer.interval}</p>
                     </div>
                     <div className='section-div'>
-                        <label className='more-info-label'>Description</label>
+                        <label className='more-info-label'><strong>Description:</strong></label>
                         <p className='more-info-section'>{currentOffer.description}</p>
                     </div>
-                    {currentOffer.identifiers &&
-                    <div className='section-div'>
-                        <label className='more-info-label'>Identifiers</label>
-                        <p className='more-info-section'>{concatIdentifiers()}</p>
-                    </div>}
                 </div>
             </div>}
         </div>

@@ -44,7 +44,8 @@ export default function OffersList(){
         };
         const successGetFavorites = (favoritesData) => {
             offers = offers.map(offer => {
-                const favorite = favoritesData.find(favorite => favorite.postId === offer.id);
+                const favorite = favoritesData
+                    .find(favorite => favorite.postId === offer.id && favorite.profileId === profile.id);
                 return { ...offer, favorite: !favorite ? false : true };
             });
             setOffersList(offers);
@@ -98,6 +99,8 @@ export default function OffersList(){
         identifier = identifier.trim();
         searchText = searchText.trim();
 
+        const email = localStorage.getItem('email');
+
         let filteredByIdentifier;
         if(identifier !== 'myOffers' && identifier !== 'favorites') {
             filteredByIdentifier = (identifier !== null && identifier !== '') 
@@ -105,7 +108,7 @@ export default function OffersList(){
             : offersList;
         } else if(identifier === 'myOffers'){
             filteredByIdentifier = (identifier !== null && identifier !== '') 
-                ? offersList.filter(offer => offer.author === auth.currentUser.email) 
+                ? offersList.filter(offer => offer.author === email) 
                 : offersList;
         } else if(identifier === 'favorites') {
             filteredByIdentifier = (identifier !== null && identifier !== '') 

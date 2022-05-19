@@ -23,6 +23,7 @@ export default function OfferForm() {
                 title: document.getElementById('title').value,
                 subtitle: document.getElementById('subtitle').value,
                 location: document.getElementById('location').value,
+                phone: document.getElementById('phone').value,
                 interval: document.getElementById('interval').value,
                 description: document.getElementById('description').value,
                 identifiers: document.getElementById('list').value.split(' '),
@@ -34,8 +35,8 @@ export default function OfferForm() {
     }
 
     const succesPostOffer = (response) => {
-        window.location.reload(false);
         alert('Offer posted successfuly');
+        setTimeout(() => window.location.href='/offers', 1000);
     }
 
     const failurePostOffer = () => {
@@ -51,6 +52,7 @@ export default function OfferForm() {
                 <input className="offer-form-input-short" placeholder="Location" id='location' name='location'></input>
                 <input className="offer-form-input-short" placeholder="Interval" id='interval' name='interval'></input>
             </div>
+            <input className="offer-form-input" placeholder="Phone contact" id='phone' name='phone'></input>
             <textarea className="offer-form-input" name="description" cols="40" rows="5" placeholder="Description" id='description'></textarea>
 
             <input className="identifiers-input" name='identifier' id='identifier' placeholder="Identifiers (ex. #food)" onKeyUp={addIdentifier}></input>

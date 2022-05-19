@@ -43,7 +43,8 @@ export default function RequestsList(){
         };
         const successGetFavorites = (favoritesData) => {
             requests = requests.map(request => {
-                const favorite = favoritesData.find(favorite => favorite.postId === request.id);
+                const favorite = favoritesData
+                    .find(favorite => favorite.postId === request.id && favorite.profileId === profile.id);
                 return { ...request, favorite: !favorite ? false : true };
             });
             setRequestsList(requests);
@@ -97,6 +98,8 @@ export default function RequestsList(){
         identifier = identifier.trim();
         searchText = searchText.trim();
 
+        const email = localStorage.getItem('email');
+
         let filteredByIdentifier;
         if(identifier !== 'myRequests' && identifier !== 'favorites') {
             filteredByIdentifier = (identifier !== null && identifier !== '') 
@@ -104,7 +107,7 @@ export default function RequestsList(){
                 : requestsList;
         } else if(identifier === 'myRequests'){
             filteredByIdentifier = (identifier !== null && identifier !== '') 
-                ? requestsList.filter(offer => offer.author === auth.currentUser.email) 
+                ? requestsList.filter(offer => offer.author === email) 
                 : requestsList;
         } else if(identifier === 'favorites') {
             filteredByIdentifier = (identifier !== null && identifier !== '') 

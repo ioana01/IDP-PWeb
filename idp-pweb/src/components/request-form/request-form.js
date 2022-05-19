@@ -1,12 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import { auth } from "../../firebase";
-import { postRequest } from '../../contexts/apis';
+import { getProfile, postRequest } from '../../contexts/apis';
 import './request-form.css';
 
 export default function RequestForm() {
 
+    const email = localStorage.getItem('email');
     const token = localStorage.getItem('token');
 
+    useEffect(() => {
+        getProfile({email: email}, token, successGetProfile, failureGetProfile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const [profile, setProfile] = useState(null);
     const [requestForm, setRequestForm] = useState({
         title: "",
         subtitle: "",
@@ -26,6 +33,14 @@ export default function RequestForm() {
         }
     }
 
+    const successGetProfile = (data) => {
+        setProfile(data);
+    }
+    const failureGetProfile = (error) => {
+        console.log(error);
+        setProfile(null);
+    }
+
     const handleTitle = (value) => setRequestForm({...requestForm, title: value});
     const handleSubtitle = (value) => setRequestForm({...requestForm, subtitle: value});
     const handleLocation = (value) => setRequestForm({...requestForm, location: value});
@@ -36,23 +51,26 @@ export default function RequestForm() {
         setIdentifierText(requestForm.identifiers.join(' '));
     }, [requestForm.identifiers]);
 
+    const formatGroup = (group) => {
+        return "adults: " + group.adults + ", children: " + group.children + ", elders: " + group.elders + ", pets: " + group.pets;
+    }
+
     const submitRequest = () => {
-        postRequest(requestForm, token, successPostRequest, failurePostRequest);
+        postRequest({...requestForm, 
+            author: email, 
+            phone: profile.phone, 
+            group: formatGroup(profile.group)},
+            token, successPostRequest, failurePostRequest);
     };
 
     const successPostRequest = () => {
-        console.log('Request was posted!');
-        setRequestForm({
-            ...requestForm,
-            title: "",
-            subtitle: "",
-            location: "",
-            description: "",
-            identifiers: [],
-        })
         alert('Request posted successfuly');
+        setTimeout(() => {
+            window.location.href = '/requests';
+        }, 1000);
     }
     const failurePostRequest = () => {
+        alert('Oops, something went wrong...');
     }
 
     return (
