@@ -10,23 +10,27 @@ export default function SideMenu(props) {
                 <p className="menu-section" onClick={() => props.setCurrentTab('transport')}>Transport</p>
                 <p className="menu-section" onClick={() => props.setCurrentTab('accomodation')}>Accommodation</p>
                 <p className="menu-section" onClick={() => props.setCurrentTab('food')}>Food</p>
-                <p className="menu-section" onClick={() => props.setCurrentTab('others')}>Others</p>
                 <p className="menu-section" onClick={() => props.setCurrentTab('favorites')}>Favorites</p>
-                {props.profile?.userType === 'provider' && props.currentTab !== 'requests' &&
-                <p className="menu-section" onClick={() => props.setCurrentTab('myOffers')}>My offers</p>}
-                {props.profile?.userType === 'requester' && props.currentTab !== 'offers' && 
-                <p className="menu-section" onClick={() => props.setCurrentTab('myRequests')}>My requests</p>}
+                {
+                    props.profile?.userType === 'provider' && props.currentTab !== 'requests' &&
+                        <p className="menu-section" style={{background: "#6c63ff14"}}
+                            onClick={() => props.setCurrentTab('myOffers')}>My offers</p>
+                }
+                {
+                    props.profile?.userType === 'requester' && props.currentTab !== 'offers' && 
+                        <p className="menu-section" style={{background: "#6c63ff14"}}
+                            onClick={() => props.setCurrentTab('myRequests')}>My requests</p>}
             </div>
             {
-                props.profile && props.profile.userType === 'requester' && props.list === 'requests' &&
+                props.profile && props.profile.userType === 'requester' && props.currentTab === 'requests' &&
                     <div className="add-wrapper">
-                        <Link to="/request" className="add-sign">Add request</Link>
+                        <Link to="/request" className="add-sign"><strong>Add request</strong></Link>
                     </div>
             }
             {
-                props.profile && props.profile.userType === 'provider' &&  props.list === 'offers' &&
+                props.profile && props.profile.userType === 'provider' &&  props.currentTab === 'offers' &&
                     <div className="add-wrapper">
-                        <Link to="/offer" className="add-sign">Add offer</Link>
+                        <Link to="/offer" className="add-sign"><strong>Add offer</strong></Link>
                     </div>
             }
         </div>
