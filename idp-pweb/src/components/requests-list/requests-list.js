@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import SideMenu from "../side-menu/side-menu";
 import SearchBar from "../search-bar/search-bar";
 import RequestCard from "../request-card/request-card";
@@ -116,16 +115,16 @@ export default function RequestsList(){
 
     return (
         <div className="grid grid-cols-6 gap-0">
-            <SideMenu setCurrentTab={changeCurrentTab}/>
+            <SideMenu
+                profile={profile}
+                list="requests"
+                setCurrentTab={changeCurrentTab}
+                />
             <div className="card-list sm:col-span-4 col-span-6">
                 <SearchBar
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}/>
 
-                {profile && profile.userType === 'provider' &&
-                <div className="add-wrapper">
-                    <Link to="/offer" className="add-sign">Add offer</Link>
-                </div>}
                 <div className="cards-container grid grid-cols-2 gap-8">
                     {
                         filteredRequests.length > 0 && filteredRequests.map(request => {

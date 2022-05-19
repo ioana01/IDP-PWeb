@@ -116,16 +116,16 @@ export default function OffersList(){
 
     return (
         <div className="grid grid-cols-6 gap-0">
-            <SideMenu setCurrentTab={changeCurrentTab}/>
+            <SideMenu
+                profile={profile}
+                list="offers"
+                setCurrentTab={changeCurrentTab}
+                />
             <div className="card-list sm:col-span-4 col-span-6">
                 <SearchBar
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}/>
 
-                {profile && profile.userType === 'provider' &&
-                <div className="add-wrapper">
-                    <Link to="/offer" className="add-sign">Add offer</Link>
-                </div>}
                 <div className="cards-container grid grid-cols-2 gap-8">
                     {
                         filteredOffers.length > 0 && filteredOffers.map(offer => {

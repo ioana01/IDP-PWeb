@@ -163,6 +163,7 @@ export default function SignUp() {
                             updateStep={updateStep}
                         ></Step1> :
                         <Step2
+                            userType={newUser.userType}
                             adults={newUser.group.adults}
                             children={newUser.group.children}
                             elders={newUser.group.elders}
@@ -171,10 +172,12 @@ export default function SignUp() {
                             decreaseGroupMember={decreaseGroupMember}
                         ></Step2> 
                     }
-                    {currentStep[0] === 0 || currentStep === 0 ?
-                        <button className='register-submit-button' onClick={updateStep}>Next</button> :
-                        <button className='register-submit-button' id='register-btn' 
-                        onClick={handleSubmit} type='submit'>Register</button>}
+                    {
+                        currentStep[0] === 0 || currentStep === 0 ?
+                            <button className='register-submit-button' onClick={updateStep}>Next</button> :
+                            <button className='register-submit-button' id='register-btn' 
+                            onClick={handleSubmit} type='submit'>Register</button>
+                    }
                     <div className="mt-4 mb-4">
                         {queryStatus.error && <div className="text-red-600">{queryStatus.error}</div>}
                     </div>

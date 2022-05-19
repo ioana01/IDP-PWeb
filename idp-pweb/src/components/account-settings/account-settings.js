@@ -120,43 +120,45 @@ export default function AccountSettings() {
                     </div>
                     <span className="text-xs mt-2 pb-4">Phone number is important because you might be contacted by other users. </span>
                 </div>
-                <div className="mt-4 flex flex-col text-justify border-b-[1px] border-gray">
-                    <span className="font-bold">Group description (this section applies in case of refugees) </span>
-                    <div className='pb-2'>
-                        <div className='flex flex-row justify-between mt-1'>
-                            <span className="mr-2">Adults (18-65)</span>
-                            <AccountQuantityChange 
-                                groupType={groupTypes.adults}
-                                groupValue={profile.group.adults} 
-                                decreaseButton={decreaseButton} 
-                                increaseButton={increaseButton}/>
-                        </div>
-                        <div className='flex flex-row justify-between mt-1'>
-                            <span className="mr-2">Children ({"<"} 18)</span>
-                            <AccountQuantityChange 
-                                groupType={groupTypes.children}
-                                groupValue={profile.group.children} 
-                                decreaseButton={decreaseButton}
-                                increaseButton={increaseButton}/>
-                        </div>
-                        <div className='flex flex-row justify-between mt-1'>
-                            <span className="mr-2">Elders ({">"} 65)</span>
-                            <AccountQuantityChange
-                                groupType={groupTypes.elders}
-                                groupValue={profile.group.elders}
-                                decreaseButton={decreaseButton}
-                                increaseButton={increaseButton}/>
-                        </div>
-                        <div className='flex flex-row justify-between mt-1'>
-                            <span className="mr-2">Pets</span>
-                            <AccountQuantityChange
-                                groupType={groupTypes.pets}
-                                groupValue={profile.group.pets}
-                                decreaseButton={decreaseButton}
-                                increaseButton={increaseButton}/>
+                {profile.userType !== 'provider' &&
+                    <div className="mt-4 flex flex-col text-justify border-b-[1px] border-gray">
+                        <span className="font-bold">Group description (this section applies in case of refugees) </span>
+                        <div className='pb-2'>
+                            <div className='flex flex-row justify-between mt-1'>
+                                <span className="mr-2">Adults (18-65)</span>
+                                <AccountQuantityChange 
+                                    groupType={groupTypes.adults}
+                                    groupValue={profile.group.adults} 
+                                    decreaseButton={decreaseButton} 
+                                    increaseButton={increaseButton}/>
+                            </div>
+                            <div className='flex flex-row justify-between mt-1'>
+                                <span className="mr-2">Children ({"<"} 18)</span>
+                                <AccountQuantityChange 
+                                    groupType={groupTypes.children}
+                                    groupValue={profile.group.children} 
+                                    decreaseButton={decreaseButton}
+                                    increaseButton={increaseButton}/>
+                            </div>
+                            <div className='flex flex-row justify-between mt-1'>
+                                <span className="mr-2">Elders ({">"} 65)</span>
+                                <AccountQuantityChange
+                                    groupType={groupTypes.elders}
+                                    groupValue={profile.group.elders}
+                                    decreaseButton={decreaseButton}
+                                    increaseButton={increaseButton}/>
+                            </div>
+                            <div className='flex flex-row justify-between mt-1'>
+                                <span className="mr-2">Pets</span>
+                                <AccountQuantityChange
+                                    groupType={groupTypes.pets}
+                                    groupValue={profile.group.pets}
+                                    decreaseButton={decreaseButton}
+                                    increaseButton={increaseButton}/>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <button className='md:invisible bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button>
             </div>
             <div className='w-0 md:w-2/4 h-full flex flex-col items-center invisible md:visible'>
