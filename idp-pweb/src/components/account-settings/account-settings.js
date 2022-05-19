@@ -26,6 +26,8 @@ export default function AccountSettings() {
 
     const updateProfile = () => {
         console.log('update profile');
+        const token = localStorage.getItem('token');
+        // postUpdateProfile(profile, token, successUpdateProfile, failureUpdateProfile);
     }
 
     const nameChange = (value) => setProfile({...profile, name: value});
@@ -53,11 +55,13 @@ export default function AccountSettings() {
 
 
     const updateProfileDetails = () => {
-
+        
     }
+
     const successUpdateProfile = (success) => {
         console.log('Success update profile');
     }
+
     const failureUpdateProfile = (failure) => {
         console.log('Failure update profile');
     }

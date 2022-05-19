@@ -9,6 +9,7 @@ import {
     postFavorite,
     deleteFavorite,
     getProfile } from '../../contexts/apis';
+import { auth } from "../../firebase";
 import './requests-list.css';
 
 
@@ -96,9 +97,20 @@ export default function RequestsList(){
         identifier = identifier.trim();
         searchText = searchText.trim();
 
-        const filteredByIdentifier = (identifier !== null && identifier !== '') 
-            ? requestsList.filter(offer => offer.identifiers.includes(identifier)) 
-            : requestsList;
+        let filteredByIdentifier;
+        if(identifier !== 'myRequests' && identifier !== 'favorites') {
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? requestsList.filter(offer => offer.identifiers.includes(identifier)) 
+                : requestsList;
+        } else if(identifier === 'myRequests'){
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? requestsList.filter(offer => offer.author === auth.currentUser.email) 
+                : requestsList;
+        } else if(identifier === 'favorites') {
+            filteredByIdentifier = (identifier !== null && identifier !== '') 
+                ? requestsList.filter(offer => offer.favorite) 
+                : requestsList;
+        }
 
         const finalFiltered = (searchText !== null && searchText !== '') 
             ? filteredByIdentifier.filter(offer => offer.title.toUpperCase().includes(searchText.toUpperCase())) 
@@ -115,11 +127,7 @@ export default function RequestsList(){
 
     return (
         <div className="grid grid-cols-6 gap-0">
-            <SideMenu
-                profile={profile}
-                list="requests"
-                setCurrentTab={changeCurrentTab}
-                />
+            <SideMenu setCurrentTab={changeCurrentTab} profile={profile} currentTab='requests'/>
             <div className="card-list sm:col-span-4 col-span-6">
                 <SearchBar
                     value={searchText}
