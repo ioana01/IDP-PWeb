@@ -5,7 +5,7 @@ from pyrebase import pyrebase
 
 time.sleep(15)
 
-DEV_MODE = True
+DEV_MODE = False
 
 RABBITMQ_HOST = RABBITMQ_HOST = 'localhost' if DEV_MODE else 'rabbitmq'
 

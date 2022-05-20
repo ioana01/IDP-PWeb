@@ -11,7 +11,7 @@ services:
 plugins:
   - name: rate-limiting
     config:
-        minute: 15
+        minute: 60
         limit_by: ip
         policy: local
 

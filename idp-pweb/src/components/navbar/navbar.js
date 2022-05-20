@@ -42,12 +42,16 @@ export default function BootstrapNavbar() {
                     <a href="/" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         About
                     </a>
+                    { auth.currentUser && 
                     <a href="/offers" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         Offers
                     </a>
+                    }
+                    { auth.currentUser &&
                     <a href="/requests" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         Requests
                     </a>
+                    }
                     <a href="/info" className="block mt-3 lg:inline-block lg:mt-0 text-teal-200 mr-4 nav-item">
                         Emergency info
                     </a>

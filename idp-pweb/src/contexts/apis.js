@@ -1,8 +1,8 @@
 const axios = require('axios');
 
-const DEV_MODE = true
+const DEV_MODE = false
 
-const apiURL = DEV_MODE ? 'http://localhost:7020' : 'http://localhost:8000'; //replace with localhost:7020 when testing
+const apiURL = DEV_MODE ? 'http://localhost:7020' : 'http://localhost:80'; //replace with localhost:7020 when testing
 const postOfferURL = apiURL + '/api/offers';
 const postRequestURL = apiURL + '/api/requests';
 const getOfferURL = apiURL + '/api/offers';

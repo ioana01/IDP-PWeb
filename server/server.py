@@ -13,7 +13,7 @@ import uuid
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
-DEV_MODE = True
+DEV_MODE = False
 RABBITMQ_HOST = 'localhost' if DEV_MODE else 'rabbitmq'
 MONGODB_HOST = 'localhost' if DEV_MODE else 'mongo-database'
 
