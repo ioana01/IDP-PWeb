@@ -165,10 +165,10 @@ export default function AccountSettings() {
                 }
                 {/* <button className='md:invisible bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button> */}
             </div>
-            {/* <div className='w-0 md:w-2/4 h-full flex flex-col items-center invisible md:visible'>
+            <div className='w-0 md:w-2/4 h-full flex flex-col items-center invisible md:visible'>
                 <img src={profilePicture} alt="profile" className="w-96 mb-4"/>
-                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button>
-            </div> */}
+                {/* <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4' onClick={updateProfile}>Submit</button> */}
+            </div>
         </div>
     )
 }
